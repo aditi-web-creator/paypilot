@@ -18,10 +18,20 @@ export interface ChatResponseData {
 }
 
 export const aiService = {
-  async sendMessage(message: string, sessionId?: string): Promise<ChatResponseData> {
+  async sendMessage(
+    message: string,
+    sessionId?: string,
+    context?: { userName?: string; currency?: string; monthlyLimitUSD?: number }
+  ): Promise<ChatResponseData> {
     const res = await request<{ success: boolean; data: ChatResponseData }>('/ai/chat', {
       method: 'POST',
-      body: JSON.stringify({ message, sessionId }),
+      body: JSON.stringify({
+        message,
+        sessionId,
+        userName: context?.userName,
+        currency: context?.currency,
+        monthlyLimitUSD: context?.monthlyLimitUSD,
+      }),
     });
     return res.data;
   },

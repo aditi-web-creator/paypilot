@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  sku              String   @unique
+  name             String   @unique
+  brand            String
+  category         String
+  subcategory      String
+  description      String
+  priceUSD         Float
+  originalPriceUSD Float?
+  rating           Float    @default(4.5)
+  reviewCount      Int      @default(0)
+  stock            Int      @default(50)
+  imageUrl         String
+  tags             String   @default("[]") // JSON string array
+  specs            String   @default("{}") // JSON string object
+  createdAt        DateTime @default(now())
+
+  @@index([category])
+  @@index([subcategory])
+  @@index([brand])
+  @@index([priceUSD])
+  @@index([rating])
+}

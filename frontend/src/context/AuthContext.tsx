@@ -3,6 +3,8 @@ import { UserBudget, UserProfile } from '../types';
 import { request } from '../services/api';
 import { budgetService } from '../services/orderService';
 
+import { useSettings } from './SettingsContext';
+
 interface AuthContextType {
   user: UserProfile | null;
   budget: UserBudget | null;
@@ -15,32 +17,34 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserProfile | null>({
+  const { fullName, email, currency: settingsCurrency, monthlyLimitUSD, setCurrency: setSettingsCurrency, updateSettings } = useSettings();
+
+  const [backendBudget, setBackendBudget] = useState<UserBudget | null>(null);
+
+  const user: UserProfile = {
     id: '00000000-0000-0000-0000-000000000001',
-    email: 'demo.shopper@paypilot.ai',
-    full_name: 'Alex Mercer',
-    preferred_currency: 'USD',
+    email: email,
+    full_name: fullName,
+    preferred_currency: settingsCurrency,
     created_at: new Date().toISOString(),
-  });
-  const [budget, setBudget] = useState<UserBudget | null>({
-    id: '00000000-0000-0000-0000-000000000002',
-    user_id: '00000000-0000-0000-0000-000000000001',
-    budget_limit: 500,
-    currency: 'USD',
+  };
+
+  const budget: UserBudget = {
+    id: backendBudget?.id || '00000000-0000-0000-0000-000000000002',
+    user_id: user.id,
+    budget_limit: monthlyLimitUSD,
+    currency: settingsCurrency,
     updated_at: new Date().toISOString(),
-  });
-  const [currency, setCurrencyState] = useState<string>('USD');
+  };
 
   const refreshAuth = async () => {
     try {
       const res = await request<{ success: boolean; user: UserProfile; budget: UserBudget }>('/auth/me');
-      if (res.user) setUser(res.user);
       if (res.budget) {
-        setBudget(res.budget);
-        setCurrencyState(res.budget.currency || 'USD');
+        setBackendBudget(res.budget);
       }
     } catch (e) {
-      console.warn('Could not refresh auth from backend, keeping demo user session:', e);
+      console.warn('Could not refresh auth from backend, keeping active session:', e);
     }
   };
 
@@ -49,15 +53,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const updateBudgetLimit = async (limit: number) => {
-    const updated = await budgetService.updateBudget(limit, currency);
-    setBudget(updated);
+    await updateSettings({ monthlyLimitUSD: limit });
+    try {
+      const updated = await budgetService.updateBudget(limit, settingsCurrency);
+      setBackendBudget(updated);
+    } catch (e) {
+      console.warn('Could not sync budget limit with backend:', e);
+    }
   };
 
   const setCurrency = (curr: string) => {
-    setCurrencyState(curr);
-    if (budget) {
-      budgetService.updateBudget(budget.budget_limit, curr);
-    }
+    setSettingsCurrency(curr);
   };
 
   return (
@@ -65,7 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         user,
         budget,
-        currency,
+        currency: settingsCurrency,
         setCurrency,
         updateBudgetLimit,
         refreshAuth,

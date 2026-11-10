@@ -5,6 +5,10 @@ export const chatMessageSchema = z.object({
   sessionId: z.string().optional(),
   message: z.string().min(1, 'Message cannot be empty'),
   userId: z.string().default('00000000-0000-0000-0000-000000000001'),
+  userName: z.string().optional(),
+  currency: z.string().optional(),
+  monthlyLimitUSD: z.number().optional(),
+  currentSpendUSD: z.number().optional(),
 });
 
 export const extractRequirementsSchema = z.object({
@@ -21,16 +25,22 @@ export const productDetailsQuerySchema = z.object({
 export const productQuerySchema = z.object({
   q: z.string().optional(),
   category: z.string().optional(),
-  brand: z.string().optional(),
+  subcategory: z.string().optional(),
+  brand: z.union([z.string(), z.array(z.string())]).optional(),
   minPrice: z.coerce.number().optional(),
   maxPrice: z.coerce.number().optional(),
-  sort: z.enum(['price_asc', 'price_desc', 'rating_desc', 'name_asc', 'relevance']).optional(),
+  rating: z.coerce.number().optional(),
+  inStockOnly: z.preprocess((val) => val === 'true' || val === true || val === '1', z.boolean().optional()).optional(),
+  sort: z.enum(['price_asc', 'price_desc', 'rating_desc', 'name_asc', 'newest', 'relevance']).optional(),
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().positive().max(100).default(20),
 });
 
 export const productCompareSchema = z.object({
-  productIds: z.array(z.string()).min(2, 'At least 2 products required for comparison').max(5, 'Maximum 5 products allowed for comparison'),
+  ids: z.array(z.string()).min(2, 'At least 2 products required for comparison').max(5).optional(),
+  productIds: z.array(z.string()).min(2, 'At least 2 products required for comparison').max(5).optional(),
+}).refine(data => (data.ids && data.ids.length >= 2) || (data.productIds && data.productIds.length >= 2), {
+  message: 'Must provide either ids or productIds with at least 2 product IDs',
 });
 
 // Cart Schemas

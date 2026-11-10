@@ -29,14 +29,14 @@ export class ShoppingAgent {
   /**
    * Tool 1: extractShoppingRequirements
    */
-  public async extractShoppingRequirements(prompt: string): Promise<ShoppingRequirements> {
-    return geminiAiService.extractRequirements(prompt);
+  public async extractShoppingRequirements(prompt: string, userCurrency: string = 'USD'): Promise<ShoppingRequirements> {
+    return geminiAiService.extractRequirements(prompt, userCurrency);
   }
 
   /**
    * Tool 2: searchProducts
    */
-  public async searchProducts(query: string, maxResults: number = 8): Promise<Product[]> {
+  public async searchProducts(query: string, maxResults: number = 12): Promise<Product[]> {
     return productProvider.searchProducts(query, maxResults);
   }
 
@@ -88,7 +88,6 @@ export class ShoppingAgent {
    * Tool 6: prepareCart
    */
   public async prepareCart(userId: string, productIds: string[]): Promise<Cart> {
-    // Clear and prepare fresh cart for selected recommendation
     await dbProvider.clearCart(userId);
     for (const pid of productIds) {
       await dbProvider.addItemToCart(userId, pid, 1);
@@ -105,7 +104,6 @@ export class ShoppingAgent {
 
   /**
    * Tool 8: getProductDetails
-   * Returns full record for any product by ID or name strictly from catalog data
    */
   public async getProductDetails(identifier: string): Promise<Product | null> {
     let p = await productProvider.getProductById(identifier);
@@ -117,7 +115,6 @@ export class ShoppingAgent {
 
   /**
    * Tool 9: browseCatalog
-   * Filtered, paginated listing across ALL products, not just a requirement-matched subset
    */
   public async browseCatalog(options: ProductQueryOptions = {}): Promise<any> {
     return productProvider.getProducts(options);
@@ -129,10 +126,31 @@ export class ShoppingAgent {
   public async processUserMessage(
     userId: string,
     message: string,
-    sessionId?: string
+    sessionId?: string,
+    context?: {
+      userName?: string;
+      currency?: string;
+      monthlyLimitUSD?: number;
+      currentSpendUSD?: number;
+    }
   ): Promise<AgentResponse> {
     const activitySteps: AgentActivityStep[] = [];
     const toolCalls: AgentResponse['toolCalls'] = [];
+
+    const userCurrency = (context?.currency || 'USD').toUpperCase();
+    const userName = context?.userName?.trim() || '';
+
+    // Exchange rate map for conversion
+    const currencyRates: Record<string, number> = {
+      USD: 1.0,
+      INR: 83.0,
+      EUR: 0.92,
+      GBP: 0.79,
+      CAD: 1.36,
+      AUD: 1.52,
+      JPY: 155.0,
+    };
+    const activeRate = currencyRates[userCurrency] || 1.0;
 
     // 1. Session Setup
     let session = sessionId ? await dbProvider.getSession(sessionId) : null;
@@ -142,6 +160,9 @@ export class ShoppingAgent {
 
     // Save incoming user message
     await dbProvider.addMessage(session.id, 'user', message);
+
+    // Fetch dynamic total catalog count from SQLite database
+    const totalCatalogCount = await productProvider.getTotalCount();
 
     // Check if the user is asking specifically about a single product in catalog
     const lowerMessage = message.toLowerCase();
@@ -157,11 +178,10 @@ export class ShoppingAgent {
         step: 'understanding_requirements',
         label: 'Analyzing product inquiry',
         status: 'completed',
-        details: 'Looking up specific catalog product record',
+        details: 'Looking up specific catalog product record in database',
         timestamp: new Date().toISOString(),
       });
 
-      // Extract product identifier
       const cleanTarget = message
         .replace(/tell me about|what is|does this have|product details for|specs for/gi, '')
         .trim();
@@ -179,7 +199,7 @@ export class ShoppingAgent {
           step: 'searching_catalog',
           label: 'Catalog lookup verified',
           status: 'completed',
-          details: `Found exact match: ${product.name}`,
+          details: `Found exact database match: ${product.name}`,
           timestamp: new Date().toISOString(),
         });
 
@@ -195,6 +215,9 @@ export class ShoppingAgent {
               match_score: 98,
               match_reasons: ['Direct catalog query match', `Price: $${product.price.toFixed(2)}`],
               budget_fit: 'well_within',
+              why_this_pick: 'Exact product query match with verified specs.',
+              budget_impact_percentage: 10,
+              is_over_budget: false,
             },
           ],
           activitySteps,
@@ -208,30 +231,38 @@ export class ShoppingAgent {
       step: 'understanding_requirements',
       label: 'Extracting shopping requirements & budget',
       status: 'in_progress',
-      details: 'Analyzing natural language preferences and price constraints',
+      details: 'Analyzing natural language preferences, category, and price constraints',
       timestamp: new Date().toISOString(),
     });
 
-    const requirements = await this.extractShoppingRequirements(message);
+    const requirements = await this.extractShoppingRequirements(message, userCurrency);
     toolCalls.push({
       tool: 'extractShoppingRequirements',
-      input: { prompt: message },
+      input: { prompt: message, userCurrency },
       output: requirements,
       status: 'success',
     });
 
     activitySteps[activitySteps.length - 1].status = 'completed';
 
-    // 3. Step: Searching Catalog (Tool 2)
+    // 3. Step: Searching Catalog (Tool 2) - Real database query
     activitySteps.push({
       step: 'searching_catalog',
-      label: 'Searching 160+ verified catalog products',
+      label: `Searching ${totalCatalogCount} verified products across 12 categories`,
       status: 'in_progress',
       details: requirements.category
-        ? `Filtering by category: "${requirements.category}" and preferences`
-        : 'Querying across catalog categories',
+        ? `Filtering by category: "${requirements.category}" and preferences in database`
+        : 'Querying across catalog database',
       timestamp: new Date().toISOString(),
     });
+
+    // Convert requested budget to USD if specified in user's currency
+    let targetBudgetUSD: number | undefined = undefined;
+    if (requirements.budget && requirements.budget > 0) {
+      const reqCurrency = (requirements.currency || userCurrency).toUpperCase();
+      const reqRate = currencyRates[reqCurrency] || 1.0;
+      targetBudgetUSD = requirements.budget / reqRate;
+    }
 
     const searchQuery = [
       requirements.category || '',
@@ -241,22 +272,28 @@ export class ShoppingAgent {
       .filter(Boolean)
       .join(' ');
 
-    let candidates = await this.searchProducts(searchQuery || message, 12);
+    let candidates = await this.searchProducts(searchQuery || message, 15);
 
-    // If search was overly specific, fallback to category search
+    // If search was overly specific or empty, query by category
     if (candidates.length === 0 && requirements.category) {
-      candidates = await this.searchProducts(requirements.category, 8);
+      const catResults = await productProvider.getProducts({
+        category: requirements.category,
+        maxPrice: targetBudgetUSD ? targetBudgetUSD * 1.25 : undefined,
+        limit: 12,
+        sort: 'rating_desc',
+      });
+      candidates = catResults.products;
     }
 
-    // If still no products found, pull top rated items
+    // Fallback if still empty: top rated items
     if (candidates.length === 0) {
-      const allRes = await productProvider.getProducts({ limit: 6, sort: 'rating_desc' });
+      const allRes = await productProvider.getProducts({ limit: 8, sort: 'rating_desc' });
       candidates = allRes.products;
     }
 
     toolCalls.push({
       tool: 'searchProducts',
-      input: { query: searchQuery || message, limit: 12 },
+      input: { query: searchQuery || message, limit: 15 },
       output: candidates.map(c => ({ id: c.id, name: c.name, price: c.price })),
       status: 'success',
     });
@@ -272,62 +309,91 @@ export class ShoppingAgent {
       timestamp: new Date().toISOString(),
     });
 
-    const ranked = await geminiAiService.rankAndRecommend(message, requirements, candidates);
+    // Check user budget from store or context
+    const budgetCheck = await this.checkBudget(userId, 0);
+    const monthlyLimitUSD = context?.monthlyLimitUSD || budgetCheck.budgetLimit;
+    const remainingBudgetUSD = budgetCheck.remaining;
+
+    const ranked = await geminiAiService.rankAndRecommend(
+      message,
+      requirements,
+      candidates,
+      monthlyLimitUSD,
+      remainingBudgetUSD
+    );
     activitySteps[activitySteps.length - 1].status = 'completed';
+
+    // Check cheaper alternatives for any item that pushes over budget
+    const topPicks = ranked.slice(0, 4);
+    for (const pick of topPicks) {
+      const price = pick.product.priceUSD || pick.product.price;
+      if (price > remainingBudgetUSD || pick.is_over_budget) {
+        pick.is_over_budget = true;
+        // Search SQLite for a cheaper alternative in the same category
+        try {
+          const cheaperOptions = await productProvider.getProducts({
+            category: pick.product.category,
+            maxPrice: remainingBudgetUSD > 10 ? remainingBudgetUSD : price * 0.7,
+            sort: 'rating_desc',
+            limit: 3,
+          });
+          const alt = cheaperOptions.products.find(p => p.id !== pick.product.id);
+          if (alt) {
+            pick.cheaper_alternative = alt;
+          }
+        } catch (e) {
+          console.warn('Could not query cheaper alternative:', e);
+        }
+      }
+    }
 
     activitySteps.push({
       step: 'evaluating_budget',
       label: 'Evaluating user budget limit and spending guardrails',
-      status: 'in_progress',
-      details: 'Checking compatibility with financial constraints',
+      status: 'completed',
+      details: `Verified against monthly limit ($${monthlyLimitUSD.toFixed(2)} USD)`,
       timestamp: new Date().toISOString(),
     });
 
-    // 5. Budget Check (Tool 5)
-    const topCandidate = ranked[0];
-    const budgetCheck = await this.checkBudget(userId, topCandidate ? topCandidate.product.price : 0);
-    toolCalls.push({
-      tool: 'checkBudget',
-      input: { userId, amount: topCandidate?.product.price || 0 },
-      output: budgetCheck,
-      status: 'success',
-    });
-
-    activitySteps[activitySteps.length - 1].status = 'completed';
-
-    // 6. Preparing Recommendations
     activitySteps.push({
       step: 'preparing_recommendations',
       label: 'Compiling top recommendations and match summaries',
       status: 'completed',
-      details: `Generated ${Math.min(4, ranked.length)} curated recommendations`,
+      details: `Generated ${topPicks.length} curated recommendations from database`,
       timestamp: new Date().toISOString(),
     });
 
-    // Construct AI conversational reply
+    // Construct AI conversational reply with personalized greeting and Markdown formatting
     let replyText = '';
-    const topPicks = ranked.slice(0, 4);
+    const greeting = userName ? `Hi ${userName}! ` : 'Hello! ';
 
     if (topPicks.length > 0) {
       const lead = topPicks[0];
-      replyText = `I analyzed your request and found **${topPicks.length} great options** from our verified catalog`;
+      const leadPriceUSD = lead.product.priceUSD || lead.product.price;
+      const leadPriceInUserCurr = Math.round(leadPriceUSD * activeRate);
 
+      let budgetNote = '';
       if (requirements.budget) {
-        replyText += ` under your target budget of **$${requirements.budget}**`;
-      }
-      replyText += `.\n\n### **Top Recommendation: ${lead.product.name}**\n`;
-      replyText += `• **Price:** $${lead.product.price.toFixed(2)} (${lead.budget_fit.replace('_', ' ')})\n`;
-      replyText += `• **Match Score:** ${lead.match_score}/100\n`;
-      if (lead.match_reasons.length > 0) {
-        replyText += `• **Why It Fits:** ${lead.match_reasons.join(' ')}\n`;
-      }
-      if (lead.trade_offs && lead.trade_offs.length > 0) {
-        replyText += `• **Consideration:** ${lead.trade_offs.join(' ')}\n`;
+        const symbol = userCurrency === 'INR' ? '₹' : userCurrency === 'EUR' ? '€' : userCurrency === 'GBP' ? '£' : '$';
+        budgetNote = ` under your target budget of **${symbol}${requirements.budget.toLocaleString()}**`;
       }
 
-      replyText += `\nYou can review the specifications on the right, compare them, or click **"Add to Cart"** to prepare your order for checkout.`;
+      replyText = `${greeting}I analyzed your request and found **${topPicks.length} tailored options** from our verified catalog (${totalCatalogCount} items)${budgetNote}.\n\n`;
+      replyText += `### **Top Pick: ${lead.product.name}**\n`;
+      replyText += `• **Price:** $${leadPriceUSD.toFixed(2)} USD (~${userCurrency === 'INR' ? '₹' : userCurrency === 'EUR' ? '€' : userCurrency === 'GBP' ? '£' : '$'}${leadPriceInUserCurr.toLocaleString()} ${userCurrency})\n`;
+      replyText += `• **Match Score:** ${lead.match_score}/100\n`;
+      replyText += `• **Why this pick:** ${lead.why_this_pick || lead.match_reasons[0]}\n`;
+
+      if (lead.is_over_budget) {
+        replyText += `\n⚠️ **Budget Notice:** This product exceeds your remaining budget ($${remainingBudgetUSD.toFixed(2)} USD). `;
+        if (lead.cheaper_alternative) {
+          replyText += `Consider **${lead.cheaper_alternative.name}** at $${(lead.cheaper_alternative.priceUSD || lead.cheaper_alternative.price).toFixed(2)} USD as a budget-friendly alternative.\n`;
+        }
+      }
+
+      replyText += `\nExplore the interactive recommendation cards below to inspect specifications, compare alternatives, or add items directly to your cart.`;
     } else {
-      replyText = `We couldn't find products matching all your specific requirements. Try adjusting your budget or preferences, or browse our full 160-item catalog on the Browse Products page.`;
+      replyText = `${greeting}I could not find exact matches for your specific requirements in our catalog of ${totalCatalogCount} items. Try expanding your search terms, exploring related categories, or adjusting your budget filter on the Browse page.`;
     }
 
     // Persist assistant message in database
@@ -348,9 +414,9 @@ export class ShoppingAgent {
       recommendations: topPicks,
       cart: activeCart,
       budgetStatus: {
-        limit: budgetCheck.budgetLimit,
+        limit: monthlyLimitUSD,
         spent: budgetCheck.currentSpent,
-        remaining: budgetCheck.remaining,
+        remaining: remainingBudgetUSD,
         isOverBudget: !budgetCheck.isAllowed,
       },
       activitySteps,

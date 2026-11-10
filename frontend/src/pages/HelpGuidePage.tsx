@@ -27,7 +27,7 @@ export const HelpGuidePage: React.FC = () => {
       budget: '$150.00',
       expectedFlow: [
         'AI extracts requirements: Category (Headphones), Budget ($150), Specs (ANC, Battery Life)',
-        'Backend queries 160+ items in catalog and scores match criteria',
+        'Backend queries 380+ items in catalog and scores match criteria',
         'Top curated recommendations displayed on right panel with match score and budget fit',
         'User selects product and adds to cart',
         'Cart totals recalculated and verified against budget limit',
@@ -151,7 +151,7 @@ export const HelpGuidePage: React.FC = () => {
           <div className="p-4 rounded-lg bg-emerald-50/70 border border-emerald-200 space-y-2">
             <span className="font-bold text-emerald-900 text-sm block">1. AI Agent Domain</span>
             <p className="text-slate-700 leading-relaxed">
-              Google Gemini API extracts intent, scores 160+ items in catalog, compares specifications, and explains match rationale.
+              Google Gemini API extracts intent, queries 380+ items in database across 12 categories, compares specifications, and explains match rationale.
             </p>
             <span className="text-[11px] font-semibold text-emerald-800 block">
               Boundary: AI cannot capture payments or alter budgets.
@@ -161,7 +161,7 @@ export const HelpGuidePage: React.FC = () => {
           <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
             <span className="font-bold text-slate-900 text-sm block">2. Backend Financial Core</span>
             <p className="text-slate-700 leading-relaxed">
-              Express & PostgreSQL recalculate cart totals, enforce spending limits, manage OAuth tokens, and call PayPal Orders API v2.
+              Express & SQLite recalculate cart totals, enforce spending limits in USD, manage OAuth tokens, and call PayPal Orders API v2.
             </p>
             <span className="text-[11px] font-semibold text-slate-800 block">
               Boundary: Math & rules are strictly non-negotiable.

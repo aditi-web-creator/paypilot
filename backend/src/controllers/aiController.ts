@@ -7,9 +7,14 @@ import { productProvider } from '../services/catalog/ProductProvider.js';
 export async function chat(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   try {
     const userId = req.user?.id || req.body.userId || DEMO_USER_ID;
-    const { message, sessionId } = req.body;
+    const { message, sessionId, userName, currency, monthlyLimitUSD, currentSpendUSD } = req.body;
 
-    const agentResult = await shoppingAgent.processUserMessage(userId, message, sessionId);
+    const agentResult = await shoppingAgent.processUserMessage(userId, message, sessionId, {
+      userName,
+      currency,
+      monthlyLimitUSD,
+      currentSpendUSD,
+    });
 
     return res.json({
       success: true,

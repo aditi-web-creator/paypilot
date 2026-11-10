@@ -2,7 +2,8 @@ import React from 'react';
 import { Menu, ShoppingBag, ShieldCheck, User } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
+import { useSettings } from '../../context/SettingsContext';
+import { formatMoney, SUPPORTED_CURRENCIES } from '../../utils/currency';
 
 export interface HeaderProps {
   onToggleSidebar: () => void;
@@ -11,7 +12,7 @@ export interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, title }) => {
   const { itemCount, cart } = useCart();
-  const { currency, setCurrency, user } = useAuth();
+  const { fullName, avatarInitial, currency, setCurrency } = useSettings();
 
   return (
     <header className="sticky top-0 z-30 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between">
@@ -33,16 +34,17 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, title }) => {
           <span>PayPal Sandbox (Zero-Risk Test Mode)</span>
         </div>
 
-        {/* Currency Switcher */}
+        {/* Synchronized Currency Switcher */}
         <select
           value={currency}
           onChange={e => setCurrency(e.target.value)}
-          className="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+          className="text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer hover:border-slate-400"
         >
-          <option value="USD">USD ($)</option>
-          <option value="INR">INR (₹)</option>
-          <option value="EUR">EUR (€)</option>
-          <option value="GBP">GBP (£)</option>
+          {SUPPORTED_CURRENCIES.map(c => (
+            <option key={c.code} value={c.code}>
+              {c.code} ({c.symbol})
+            </option>
+          ))}
         </select>
 
         {/* Cart Quick Button */}
@@ -54,7 +56,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, title }) => {
           <ShoppingBag className="w-4 h-4 text-emerald-700" />
           {cart && cart.items.length > 0 && (
             <span className="text-xs font-bold hidden sm:inline text-slate-900">
-              ${cart.total.toFixed(2)}
+              {formatMoney(cart.total, currency)}
             </span>
           )}
           {itemCount > 0 && (
@@ -65,17 +67,17 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, title }) => {
         </NavLink>
 
         {/* User Profile Pill */}
-        <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-          <div className="w-8 h-8 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-800 font-bold text-xs">
-            {user?.full_name?.charAt(0) || <User className="w-4 h-4" />}
+        <NavLink to="/settings" className="flex items-center gap-2 pl-2 border-l border-slate-200 hover:opacity-85 transition-opacity">
+          <div className="w-8 h-8 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-800 font-bold text-xs shadow-sm">
+            {avatarInitial}
           </div>
           <div className="hidden xl:flex flex-col text-left">
             <span className="text-xs font-bold text-slate-900 leading-tight">
-              {user?.full_name || 'Alex Mercer'}
+              {fullName}
             </span>
             <span className="text-[10px] text-slate-500 leading-tight">Demo Shopper</span>
           </div>
-        </div>
+        </NavLink>
       </div>
     </header>
   );

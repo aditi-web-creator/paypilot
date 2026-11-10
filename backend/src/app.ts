@@ -69,6 +69,14 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/products', productsRoutes);
+app.use('/api/categories', (req, res, next) => {
+  // Delegate to products categories handler
+  import('./controllers/productsController.js').then(c => c.getCategories(req, res, next)).catch(next);
+});
+app.use('/api/brands', (req, res, next) => {
+  // Delegate to products brands handler
+  import('./controllers/productsController.js').then(c => c.getBrands(req, res, next)).catch(next);
+});
 app.use('/api/cart', cartRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/orders', ordersRoutes);

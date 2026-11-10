@@ -16,6 +16,8 @@ import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
 import { budgetService } from '../services/orderService';
 import { Order } from '../types';
+import { useSettings } from '../context/SettingsContext';
+import { formatMoney } from '../utils/currency';
 import {
   AreaChart,
   Area,
@@ -29,6 +31,7 @@ import {
 } from 'recharts';
 
 export const DashboardPage: React.FC = () => {
+  const { fullName, currency, monthlyLimitUSD } = useSettings();
   const [data, setData] = useState<{
     profile: any;
     budgetLimit: number;
@@ -83,7 +86,7 @@ export const DashboardPage: React.FC = () => {
             <span>PayPilot Fintech Dashboard</span>
           </div>
           <h2 className="text-2xl font-extrabold tracking-tight">
-            Welcome back, {data?.profile?.full_name || 'Alex Mercer'}
+            Welcome back, {fullName}
           </h2>
           <p className="text-xs text-emerald-200 mt-1 max-w-xl">
             Your autonomous AI shopping copilot is active. Search verified products, enforce your budget
@@ -112,7 +115,7 @@ export const DashboardPage: React.FC = () => {
           </div>
           <div>
             <div className="text-2xl font-extrabold text-slate-900">
-              ${data?.budgetLimit?.toFixed(2) || '500.00'}
+              {formatMoney(data?.budgetLimit ?? monthlyLimitUSD, currency)}
             </div>
             <span className="text-[11px] text-slate-500 font-medium">Approved spending limit</span>
           </div>
@@ -132,14 +135,14 @@ export const DashboardPage: React.FC = () => {
           </div>
           <div>
             <div className="text-2xl font-extrabold text-slate-900">
-              ${data?.totalSpent?.toFixed(2) || '0.00'}
+              {formatMoney(data?.totalSpent ?? 0, currency)}
             </div>
             <span className="text-[11px] text-slate-500 font-medium">Verified settled captures</span>
           </div>
           <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
             <span className="text-slate-500">Budget used:</span>
             <span className="font-semibold text-slate-700">
-              {data ? Math.round((data.totalSpent / (data.budgetLimit || 1)) * 100) : 0}%
+              {data ? Math.round((data.totalSpent / (data.budgetLimit || monthlyLimitUSD || 1)) * 100) : 0}%
             </span>
           </div>
         </div>
@@ -154,7 +157,7 @@ export const DashboardPage: React.FC = () => {
           </div>
           <div>
             <div className="text-2xl font-extrabold text-emerald-700">
-              ${data?.remainingBudget?.toFixed(2) || '500.00'}
+              {formatMoney(data?.remainingBudget ?? Math.max(0, monthlyLimitUSD - (data?.totalSpent ?? 0)), currency)}
             </div>
             <span className="text-[11px] text-slate-500 font-medium">Safe spending allowance</span>
           </div>
@@ -210,9 +213,9 @@ export const DashboardPage: React.FC = () => {
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#64748B' }} />
-                <YAxis tick={{ fontSize: 11, fill: '#64748B' }} tickFormatter={v => `$${v}`} />
+                <YAxis tick={{ fontSize: 11, fill: '#64748B' }} tickFormatter={v => formatMoney(v, currency)} />
                 <Tooltip
-                  formatter={(value: any) => [`$${Number(value).toFixed(2)}`, 'Amount']}
+                  formatter={(value: any) => [formatMoney(Number(value), currency), 'Amount']}
                   contentStyle={{
                     backgroundColor: '#FFFFFF',
                     borderRadius: '8px',
@@ -261,7 +264,7 @@ export const DashboardPage: React.FC = () => {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(val: any) => [`$${Number(val).toFixed(2)}`, 'Spent']}
+                    formatter={(val: any) => [formatMoney(Number(val), currency), 'Spent']}
                     contentStyle={{ borderRadius: '8px', fontSize: '11px' }}
                   />
                 </PieChart>
@@ -280,7 +283,7 @@ export const DashboardPage: React.FC = () => {
                     />
                     <span className="font-medium text-slate-700">{cat.category}</span>
                   </div>
-                  <span className="font-bold text-slate-900">${cat.amount.toFixed(2)}</span>
+                  <span className="font-bold text-slate-900">{formatMoney(cat.amount, currency)}</span>
                 </div>
               ))
             ) : (
@@ -331,7 +334,7 @@ export const DashboardPage: React.FC = () => {
                         {new Date(o.created_at).toLocaleDateString()}
                       </td>
                       <td className="py-3 font-bold text-slate-900">
-                        ${o.total_amount.toFixed(2)}
+                        {formatMoney(o.total_amount, currency)}
                       </td>
                       <td className="py-3">
                         <Badge
@@ -367,10 +370,10 @@ export const DashboardPage: React.FC = () => {
 
             <div className="space-y-2">
               {[
-                'Find wireless headphones under $100 for studying with noise cancellation',
-                'Find a programming laptop under $1,200 with 16GB RAM',
-                'Compare mechanical keyboards under $90',
-                'Find a smartwatch with heart rate & GPS under $150',
+                `Find wireless headphones under ${formatMoney(100, currency)} for studying with noise cancellation`,
+                `Find a programming laptop under ${formatMoney(1200, currency)} with 16GB RAM`,
+                `Compare mechanical keyboards under ${formatMoney(90, currency)}`,
+                `Find a smartwatch with heart rate & GPS under ${formatMoney(150, currency)}`,
               ].map(prompt => (
                 <NavLink
                   key={prompt}

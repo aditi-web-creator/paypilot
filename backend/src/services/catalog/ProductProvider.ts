@@ -1,15 +1,18 @@
-import fs from 'fs';
-import path from 'path';
+import { PrismaClient } from '@prisma/client';
 import { Product } from '../../types/index.js';
-import { env } from '../../config/env.js';
+
+const prisma = new PrismaClient();
 
 export interface ProductQueryOptions {
   q?: string;
   category?: string;
-  brand?: string;
+  subcategory?: string;
+  brand?: string | string[];
   minPrice?: number;
   maxPrice?: number;
-  sort?: 'price_asc' | 'price_desc' | 'rating_desc' | 'name_asc' | 'relevance';
+  rating?: number;
+  inStockOnly?: boolean;
+  sort?: 'price_asc' | 'price_desc' | 'rating_desc' | 'name_asc' | 'newest' | 'relevance';
   page?: number;
   limit?: number;
 }
@@ -28,7 +31,8 @@ export interface ComparisonMatrix {
   attributes: {
     key: string;
     label: string;
-    values: { productId: string; value: string | number | boolean }[];
+    bestProductId?: string;
+    values: { productId: string; value: string | number | boolean; isBest?: boolean }[];
   }[];
 }
 
@@ -36,104 +40,156 @@ export interface IProductProvider {
   getProducts(options?: ProductQueryOptions): Promise<ProductQueryResult>;
   getProductById(id: string): Promise<Product | null>;
   getProductByName(name: string): Promise<Product | null>;
-  getCategories(): Promise<string[]>;
+  getCategories(): Promise<{ categories: string[]; subcategories: Record<string, string[]> }>;
+  getCategoryList(): Promise<string[]>;
   getBrands(category?: string): Promise<string[]>;
   searchProducts(query: string, maxResults?: number): Promise<Product[]>;
   compareProducts(productIds: string[]): Promise<ComparisonMatrix>;
+  getTotalCount(): Promise<number>;
 }
 
-export class LocalProductProvider implements IProductProvider {
-  private products: Product[] = [];
-  private initialized: boolean = false;
-
-  constructor() {
-    this.loadCatalog();
+function mapPrismaProduct(row: any): Product {
+  let tags: string[] = [];
+  try {
+    tags = typeof row.tags === 'string' ? JSON.parse(row.tags) : row.tags || [];
+  } catch {
+    tags = [];
   }
 
-  private loadCatalog(): void {
-    if (this.initialized) return;
+  let specs: Record<string, any> = {};
+  try {
+    specs = typeof row.specs === 'string' ? JSON.parse(row.specs) : row.specs || {};
+  } catch {
+    specs = {};
+  }
 
-    try {
-      const candidates = [
-        path.resolve(process.cwd(), 'database/products_catalog.json'),
-        path.resolve(process.cwd(), '../database/products_catalog.json'),
-        path.resolve(__dirname, '../../../../database/products_catalog.json'),
-        path.resolve(__dirname, '../../../database/products_catalog.json'),
-      ];
+  const stock = typeof row.stock === 'number' ? row.stock : 50;
+  const stock_status: 'in_stock' | 'low_stock' | 'out_of_stock' =
+    stock === 0 ? 'out_of_stock' : stock <= 15 ? 'low_stock' : 'in_stock';
 
-      let rawData: string | null = null;
-      for (const p of candidates) {
-        if (fs.existsSync(p)) {
-          rawData = fs.readFileSync(p, 'utf-8');
-          break;
-        }
-      }
+  return {
+    id: row.id,
+    sku: row.sku,
+    name: row.name,
+    brand: row.brand,
+    category: row.category,
+    subcategory: row.subcategory,
+    description: row.description,
+    priceUSD: row.priceUSD,
+    originalPriceUSD: row.originalPriceUSD || undefined,
+    price: row.priceUSD, // alias
+    currency: 'USD',
+    rating: row.rating,
+    reviewCount: row.reviewCount,
+    stock,
+    stock_status,
+    imageUrl: row.imageUrl,
+    image_url: row.imageUrl, // alias
+    tags,
+    specs,
+    specifications: specs, // alias
+    createdAt: row.createdAt ? new Date(row.createdAt).toISOString() : new Date().toISOString(),
+    created_at: row.createdAt ? new Date(row.createdAt).toISOString() : new Date().toISOString(),
+  };
+}
 
-      if (rawData) {
-        this.products = JSON.parse(rawData);
-        this.initialized = true;
-      } else {
-        console.warn('Warning: products_catalog.json not found in candidate paths. Initializing with empty list.');
-        this.products = [];
-      }
-    } catch (error) {
-      console.error('Failed to load local product catalog:', error);
-      this.products = [];
-    }
+export class DatabaseProductProvider implements IProductProvider {
+  public async getTotalCount(): Promise<number> {
+    return prisma.product.count();
   }
 
   public async getProducts(options: ProductQueryOptions = {}): Promise<ProductQueryResult> {
-    this.loadCatalog();
-    let filtered = [...this.products];
+    const page = Math.max(1, options.page || 1);
+    const limit = Math.max(1, Math.min(100, options.limit || 20));
+    const skip = (page - 1) * limit;
 
-    // Filter by search query
-    if (options.q && options.q.trim()) {
-      const terms = options.q.toLowerCase().trim().split(/\s+/);
-      filtered = filtered.filter(p => {
-        const text = `${p.name} ${p.brand} ${p.category} ${p.description} ${JSON.stringify(p.specifications)}`.toLowerCase();
-        return terms.every(term => text.includes(term));
-      });
-    }
+    const where: any = {};
 
-    // Filter by category
+    // 1. Category Filter
     if (options.category && options.category.trim() && options.category.toLowerCase() !== 'all') {
-      filtered = filtered.filter(p => p.category.toLowerCase() === options.category!.toLowerCase());
+      where.category = { equals: options.category.trim() };
     }
 
-    // Filter by brand
-    if (options.brand && options.brand.trim() && options.brand.toLowerCase() !== 'all') {
-      filtered = filtered.filter(p => p.brand.toLowerCase() === options.brand!.toLowerCase());
+    // 2. Subcategory Filter
+    if (options.subcategory && options.subcategory.trim() && options.subcategory.toLowerCase() !== 'all') {
+      where.subcategory = { equals: options.subcategory.trim() };
     }
 
-    // Filter by price
+    // 3. Brand Filter (supports single or multi-select array / comma-separated)
+    if (options.brand) {
+      let brandList: string[] = [];
+      if (Array.isArray(options.brand)) {
+        brandList = options.brand.map(b => b.trim()).filter(Boolean);
+      } else if (typeof options.brand === 'string') {
+        brandList = options.brand.split(',').map(b => b.trim()).filter(b => b && b.toLowerCase() !== 'all');
+      }
+      if (brandList.length === 1) {
+        where.brand = { equals: brandList[0] };
+      } else if (brandList.length > 1) {
+        where.brand = { in: brandList };
+      }
+    }
+
+    // 4. Price range in USD
     if (typeof options.minPrice === 'number' && !isNaN(options.minPrice)) {
-      filtered = filtered.filter(p => p.price >= options.minPrice!);
+      where.priceUSD = { ...where.priceUSD, gte: options.minPrice };
     }
     if (typeof options.maxPrice === 'number' && !isNaN(options.maxPrice)) {
-      filtered = filtered.filter(p => p.price <= options.maxPrice!);
+      where.priceUSD = { ...where.priceUSD, lte: options.maxPrice };
     }
 
-    // Sort
+    // 5. Rating filter
+    if (typeof options.rating === 'number' && !isNaN(options.rating) && options.rating > 0) {
+      where.rating = { gte: options.rating };
+    }
+
+    // 6. In-stock only
+    if (options.inStockOnly) {
+      where.stock = { gt: 0 };
+    }
+
+    // 7. Search text filter (matches name, brand, description, subcategory, or tags)
+    if (options.q && options.q.trim()) {
+      const q = options.q.trim();
+      where.OR = [
+        { name: { contains: q } },
+        { brand: { contains: q } },
+        { description: { contains: q } },
+        { subcategory: { contains: q } },
+        { tags: { contains: q } },
+      ];
+    }
+
+    // 8. Sorting
+    let orderBy: any = { createdAt: 'desc' };
     const sort = options.sort || 'relevance';
     if (sort === 'price_asc') {
-      filtered.sort((a, b) => a.price - b.price);
+      orderBy = { priceUSD: 'asc' };
     } else if (sort === 'price_desc') {
-      filtered.sort((a, b) => b.price - a.price);
+      orderBy = { priceUSD: 'desc' };
     } else if (sort === 'rating_desc') {
-      filtered.sort((a, b) => b.rating - a.rating);
+      orderBy = { rating: 'desc' };
     } else if (sort === 'name_asc') {
-      filtered.sort((a, b) => a.name.localeCompare(b.name));
+      orderBy = { name: 'asc' };
+    } else if (sort === 'newest') {
+      orderBy = { createdAt: 'desc' };
     }
 
-    const total = filtered.length;
-    const page = Math.max(1, options.page || 1);
-    const limit = Math.max(1, options.limit || 20);
+    const [total, rows] = await Promise.all([
+      prisma.product.count({ where }),
+      prisma.product.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limit,
+      }),
+    ]);
+
     const totalPages = Math.ceil(total / limit) || 1;
-    const startIndex = (page - 1) * limit;
-    const paginated = filtered.slice(startIndex, startIndex + limit);
+    const products = rows.map(mapPrismaProduct);
 
     return {
-      products: paginated,
+      products,
       total,
       page,
       limit,
@@ -142,64 +198,108 @@ export class LocalProductProvider implements IProductProvider {
   }
 
   public async getProductById(id: string): Promise<Product | null> {
-    this.loadCatalog();
-    const found = this.products.find(p => p.id === id);
-    return found || null;
+    const row = await prisma.product.findFirst({
+      where: {
+        OR: [{ id }, { sku: id }],
+      },
+    });
+    return row ? mapPrismaProduct(row) : null;
   }
 
   public async getProductByName(name: string): Promise<Product | null> {
-    this.loadCatalog();
-    const clean = name.toLowerCase().trim();
-    // exact match first
-    let found = this.products.find(p => p.name.toLowerCase() === clean);
-    if (!found) {
-      // fuzzy partial match
-      found = this.products.find(p => p.name.toLowerCase().includes(clean) || clean.includes(p.name.toLowerCase()));
-    }
-    return found || null;
+    const clean = name.trim();
+    // Exact or contains match
+    const row = await prisma.product.findFirst({
+      where: {
+        OR: [{ name: { equals: clean } }, { name: { contains: clean } }],
+      },
+    });
+    return row ? mapPrismaProduct(row) : null;
   }
 
-  public async getCategories(): Promise<string[]> {
-    this.loadCatalog();
-    const set = new Set(this.products.map(p => p.category));
-    return Array.from(set).sort();
+  public async getCategories(): Promise<{ categories: string[]; subcategories: Record<string, string[]> }> {
+    const rows = await prisma.product.findMany({
+      select: { category: true, subcategory: true },
+      distinct: ['category', 'subcategory'],
+    });
+
+    const subMap: Record<string, Set<string>> = {};
+    rows.forEach(r => {
+      if (!subMap[r.category]) subMap[r.category] = new Set();
+      if (r.subcategory) subMap[r.category].add(r.subcategory);
+    });
+
+    const categories = Object.keys(subMap).sort();
+    const subcategories: Record<string, string[]> = {};
+    for (const cat of categories) {
+      subcategories[cat] = Array.from(subMap[cat]).sort();
+    }
+
+    return { categories, subcategories };
+  }
+
+  public async getCategoryList(): Promise<string[]> {
+    const res = await this.getCategories();
+    return res.categories;
   }
 
   public async getBrands(category?: string): Promise<string[]> {
-    this.loadCatalog();
-    let list = this.products;
+    const where: any = {};
     if (category && category !== 'all') {
-      list = list.filter(p => p.category.toLowerCase() === category.toLowerCase());
+      where.category = category;
     }
-    const set = new Set(list.map(p => p.brand));
-    return Array.from(set).sort();
+    const rows = await prisma.product.findMany({
+      where,
+      select: { brand: true },
+      distinct: ['brand'],
+      orderBy: { brand: 'asc' },
+    });
+    return rows.map(r => r.brand);
   }
 
   public async searchProducts(query: string, maxResults: number = 8): Promise<Product[]> {
-    this.loadCatalog();
-    if (!query || !query.trim()) return this.products.slice(0, maxResults);
+    if (!query || !query.trim()) {
+      const top = await prisma.product.findMany({
+        take: maxResults,
+        orderBy: { rating: 'desc' },
+      });
+      return top.map(mapPrismaProduct);
+    }
 
-    const q = query.toLowerCase().trim();
-    const terms = q.split(/\s+/).filter(Boolean);
+    const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
 
-    // Score products based on match frequency in name, brand, specs, description
-    const scored = this.products.map(product => {
+    // Fetch candidate pool matching any term
+    const candidates = await prisma.product.findMany({
+      where: {
+        OR: terms.map(term => ({
+          OR: [
+            { name: { contains: term } },
+            { brand: { contains: term } },
+            { category: { contains: term } },
+            { subcategory: { contains: term } },
+            { tags: { contains: term } },
+          ],
+        })),
+      },
+      take: 60,
+    });
+
+    // Score candidates based on match relevance
+    const scored = candidates.map(row => {
+      const p = mapPrismaProduct(row);
       let score = 0;
-      const name = product.name.toLowerCase();
-      const brand = product.brand.toLowerCase();
-      const cat = product.category.toLowerCase();
-      const desc = product.description.toLowerCase();
-      const specs = JSON.stringify(product.specifications).toLowerCase();
+      const text = `${p.name} ${p.brand} ${p.category} ${p.subcategory} ${p.description} ${p.tags.join(' ')} ${JSON.stringify(p.specs)}`.toLowerCase();
 
       for (const term of terms) {
-        if (name.includes(term)) score += 10;
-        if (brand.includes(term)) score += 8;
-        if (cat.includes(term)) score += 6;
-        if (specs.includes(term)) score += 4;
-        if (desc.includes(term)) score += 2;
+        if (p.name.toLowerCase().includes(term)) score += 12;
+        if (p.brand.toLowerCase().includes(term)) score += 10;
+        if (p.category.toLowerCase().includes(term)) score += 8;
+        if (p.subcategory.toLowerCase().includes(term)) score += 6;
+        if (p.tags.some(t => t.toLowerCase().includes(term))) score += 5;
+        if (text.includes(term)) score += 3;
       }
 
-      return { product, score };
+      return { product: p, score };
     });
 
     return scored
@@ -210,73 +310,89 @@ export class LocalProductProvider implements IProductProvider {
   }
 
   public async compareProducts(productIds: string[]): Promise<ComparisonMatrix> {
-    this.loadCatalog();
-    const foundProducts = productIds
-      .map(id => this.products.find(p => p.id === id))
-      .filter((p): p is Product => Boolean(p));
+    const validIds = productIds.slice(0, 4); // Max 4 products for comparison
+    const rows = await prisma.product.findMany({
+      where: {
+        OR: [{ id: { in: validIds } }, { sku: { in: validIds } }],
+      },
+    });
 
-    if (foundProducts.length === 0) {
+    const products = rows.map(mapPrismaProduct);
+    if (products.length === 0) {
       return { products: [], categories: [], attributes: [] };
     }
 
-    const categories = Array.from(new Set(foundProducts.map(p => p.category)));
+    const categories = Array.from(new Set(products.map(p => p.category)));
 
-    // Standard attributes
+    // Determine lowest price and highest rating
+    const lowestPrice = Math.min(...products.map(p => p.priceUSD));
+    const highestRating = Math.max(...products.map(p => p.rating));
+
+    // Standard Comparison Attributes with Highlighted Best Values
     const attributes: ComparisonMatrix['attributes'] = [
       {
         key: 'price',
-        label: 'Price ($)',
-        values: foundProducts.map(p => ({ productId: p.id, value: `$${p.price.toFixed(2)}` })),
-      },
-      {
-        key: 'brand',
-        label: 'Brand',
-        values: foundProducts.map(p => ({ productId: p.id, value: p.brand })),
+        label: 'Price (USD)',
+        values: products.map(p => ({
+          productId: p.id,
+          value: `$${p.priceUSD.toFixed(2)}`,
+          isBest: p.priceUSD === lowestPrice,
+        })),
       },
       {
         key: 'rating',
         label: 'Customer Rating',
-        values: foundProducts.map(p => ({ productId: p.id, value: `${p.rating} / 5.0` })),
+        values: products.map(p => ({
+          productId: p.id,
+          value: `${p.rating} / 5.0 (${p.reviewCount} reviews)`,
+          isBest: p.rating === highestRating,
+        })),
       },
       {
-        key: 'stock_status',
+        key: 'brand',
+        label: 'Brand',
+        values: products.map(p => ({ productId: p.id, value: p.brand })),
+      },
+      {
+        key: 'category',
+        label: 'Category & Subcategory',
+        values: products.map(p => ({ productId: p.id, value: `${p.category} → ${p.subcategory}` })),
+      },
+      {
+        key: 'stock',
         label: 'Availability',
-        values: foundProducts.map(p => ({
+        values: products.map(p => ({
           productId: p.id,
-          value: p.stock_status === 'in_stock' ? 'In Stock' : 'Low Stock',
+          value: p.stock > 0 ? `${p.stock} in stock` : 'Out of stock',
+          isBest: p.stock > 20,
         })),
       },
     ];
 
     // Collect all unique specification keys across comparing products
     const specKeys = new Set<string>();
-    foundProducts.forEach(p => {
-      Object.keys(p.specifications || {}).forEach(k => specKeys.add(k));
+    products.forEach(p => {
+      Object.keys(p.specs || {}).forEach(k => specKeys.add(k));
     });
 
     specKeys.forEach(key => {
-      const formattedLabel = key
-        .split('_')
-        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(' ');
-
       attributes.push({
         key,
-        label: formattedLabel,
-        values: foundProducts.map(p => ({
+        label: key,
+        values: products.map(p => ({
           productId: p.id,
-          value: p.specifications?.[key] !== undefined ? String(p.specifications[key]) : 'N/A',
+          value: p.specs?.[key] !== undefined ? String(p.specs[key]) : '—',
         })),
       });
     });
 
     return {
-      products: foundProducts,
+      products,
       categories,
       attributes,
     };
   }
 }
 
-// Singleton product provider instance
-export const productProvider: IProductProvider = new LocalProductProvider();
+// Singleton database product provider
+export const productProvider: IProductProvider = new DatabaseProductProvider();

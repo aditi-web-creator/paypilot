@@ -24,22 +24,34 @@ export interface ProductSpecifications {
 
 export interface Product {
   id: string;
+  sku: string;
   name: string;
   brand: string;
   category: string;
+  subcategory: string;
   description: string;
-  price: number;
+  priceUSD: number;
+  originalPriceUSD?: number;
+  price: number; // backward-compatible alias to priceUSD
   currency: string;
-  specifications: ProductSpecifications;
-  image_url: string;
   rating: number;
+  reviewCount: number;
+  stock: number;
   stock_status: 'in_stock' | 'low_stock' | 'out_of_stock';
-  created_at: string;
+  imageUrl: string;
+  image_url: string; // backward-compatible alias to imageUrl
+  tags: string[];
+  specs: ProductSpecifications;
+  specifications: ProductSpecifications; // backward-compatible alias to specs
+  createdAt: string;
+  created_at: string; // backward-compatible alias to createdAt
 }
 
 export interface ShoppingRequirements {
   category?: string;
+  subcategory?: string;
   budget?: number;
+  budgetUSD?: number;
   currency: string;
   preferences: string[];
   brand_preference?: string[];
@@ -51,6 +63,11 @@ export interface ProductRecommendation {
   match_score: number; // 0 - 100
   match_reasons: string[];
   budget_fit: 'well_within' | 'at_budget' | 'slightly_over' | 'significantly_over';
+  budget_impact_percent?: number; // e.g. "Uses 12% of your remaining budget"
+  budget_impact_percentage?: number; // alias
+  why_this_pick?: string; // one-line reason required by PART 3
+  is_over_budget?: boolean;
+  cheaper_alternative?: Product; // suggested alternative if over budget
   trade_offs?: string[];
 }
 
@@ -69,6 +86,7 @@ export interface ShoppingMessage {
   session_id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
+  spoken_summary?: string; // concise summary for text-to-speech voice
   tool_calls?: any[];
   recommendations?: ProductRecommendation[];
   created_at: string;

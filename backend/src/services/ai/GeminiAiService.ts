@@ -17,7 +17,7 @@ export class GeminiAiService {
    * Natural Language Intent & Requirement Extraction
    * Extracts category, numeric budget, currency, and specific feature preferences.
    */
-  public async extractRequirements(prompt: string): Promise<ShoppingRequirements> {
+  public async extractRequirements(prompt: string, userCurrency: string = 'USD'): Promise<ShoppingRequirements> {
     if (this.genAI) {
       try {
         const model = this.genAI.getGenerativeModel({
@@ -33,13 +33,14 @@ You are PayPilot's AI Requirement Extraction Engine.
 Analyze the user's shopping request and extract structured requirements as JSON.
 
 User Input: "${prompt}"
+User Active Currency: "${userCurrency}"
 
 Rules:
-1. Category must match one of: "Headphones", "Laptops", "Smartphones", "Keyboards", "Smartwatches", "Monitors", "Speakers", "Tablets", "Cameras", "Accessories", or null if unspecified.
-2. Budget must be an exact number. If user mentions "under $300" or "under ₹3,000" or "3000 rs" or "$60", parse the numeric amount. If user uses INR/Rupees, convert or denote currency accordingly.
-3. Currency must be standard 3-letter code: "USD", "INR", "EUR", "GBP". Default to "USD" if "$" or unspecified, or "INR" if ₹ or rs or inr.
-4. Preferences: an array of key technical requirements (e.g., "long battery life", "active noise cancellation", "comfortable ear cushions", "programming", "lightweight").
-5. Brand preference: array of mentioned brands (e.g., "Sony", "Apple", "Dell", "Logitech") or empty array.
+1. Category should match one of: "Electronics", "Fashion", "Beauty", "Home & Kitchen", "Sports", "Gaming", "Books", "Accessories", "Travel", "Automotive", "Toys", "Lifestyle", or null if unspecified.
+2. Budget must be an exact number. If user mentions "under $300" or "under ₹3,000" or "3000 rs" or "$60", parse the numeric amount.
+3. Currency must be standard 3-letter code: "USD", "INR", "EUR", "GBP", "CAD", "AUD", "JPY". Default to user currency "${userCurrency}" or detect from symbols (₹ -> INR, $ -> USD, € -> EUR, £ -> GBP, ¥ -> JPY).
+4. Preferences: an array of key technical requirements (e.g., "long battery life", "wireless", "running shoes", "cotton", "skincare", "4k", "lightweight").
+5. Brand preference: array of mentioned brands (e.g., "Sony", "Apple", "Nike", "Dell", "Logitech", "Samsung") or empty array.
 
 Return ONLY valid JSON matching this schema:
 {
@@ -58,7 +59,7 @@ Return ONLY valid JSON matching this schema:
         return {
           category: parsed.category || undefined,
           budget: typeof parsed.budget === 'number' ? parsed.budget : undefined,
-          currency: parsed.currency || 'USD',
+          currency: parsed.currency || userCurrency || 'USD',
           preferences: Array.isArray(parsed.preferences) ? parsed.preferences : [],
           brand_preference: Array.isArray(parsed.brand_preference) ? parsed.brand_preference : [],
         };
@@ -68,50 +69,58 @@ Return ONLY valid JSON matching this schema:
     }
 
     // High-Accuracy Semantic Fallback Parser
-    return this.fallbackExtractRequirements(prompt);
+    return this.fallbackExtractRequirements(prompt, userCurrency);
   }
 
-  private fallbackExtractRequirements(prompt: string): ShoppingRequirements {
+  private fallbackExtractRequirements(prompt: string, userCurrency: string = 'USD'): ShoppingRequirements {
     const lower = prompt.toLowerCase();
     
-    // 1. Detect Category
+    // 1. Detect Category across 12 categories
     let category: string | undefined;
-    if (lower.includes('headphone') || lower.includes('earphone') || lower.includes('earbud') || lower.includes('anc')) {
-      category = 'Headphones';
-    } else if (lower.includes('laptop') || lower.includes('notebook') || lower.includes('macbook') || lower.includes('programming')) {
-      category = 'Laptops';
-    } else if (lower.includes('phone') || lower.includes('smartphone') || lower.includes('mobile') || lower.includes('iphone') || lower.includes('android')) {
-      category = 'Smartphones';
-    } else if (lower.includes('keyboard') || lower.includes('mechanical')) {
-      category = 'Keyboards';
-    } else if (lower.includes('watch') || lower.includes('smartwatch') || lower.includes('fitness tracker') || lower.includes('garmin')) {
-      category = 'Smartwatches';
-    } else if (lower.includes('monitor') || lower.includes('display') || lower.includes('screen') || lower.includes('ultrawide')) {
-      category = 'Monitors';
-    } else if (lower.includes('speaker') || lower.includes('soundbar') || lower.includes('audio') || lower.includes('bluetooth speaker')) {
-      category = 'Speakers';
-    } else if (lower.includes('tablet') || lower.includes('ipad') || lower.includes('drawing')) {
-      category = 'Tablets';
-    } else if (lower.includes('camera') || lower.includes('gimbal') || lower.includes('action cam') || lower.includes('vlog')) {
-      category = 'Cameras';
-    } else if (lower.includes('charger') || lower.includes('dock') || lower.includes('mouse') || lower.includes('hub') || lower.includes('backpack') || lower.includes('accessory')) {
+    if (lower.includes('headphone') || lower.includes('earphone') || lower.includes('laptop') || lower.includes('phone') || lower.includes('tv') || lower.includes('tablet') || lower.includes('speaker') || lower.includes('electronic')) {
+      category = 'Electronics';
+    } else if (lower.includes('shoe') || lower.includes('shirt') || lower.includes('jacket') || lower.includes('dress') || lower.includes('pant') || lower.includes('hoodie') || lower.includes('fashion') || lower.includes('wear')) {
+      category = 'Fashion';
+    } else if (lower.includes('serum') || lower.includes('cream') || lower.includes('skin') || lower.includes('cleanser') || lower.includes('shampoo') || lower.includes('perfume') || lower.includes('beauty')) {
+      category = 'Beauty';
+    } else if (lower.includes('kitchen') || lower.includes('coffee') || lower.includes('blender') || lower.includes('cookware') || lower.includes('pot') || lower.includes('pan') || lower.includes('knife') || lower.includes('home')) {
+      category = 'Home & Kitchen';
+    } else if (lower.includes('sport') || lower.includes('fitness') || lower.includes('yoga') || lower.includes('gym') || lower.includes('dumbbell') || lower.includes('racket') || lower.includes('bike')) {
+      category = 'Sports';
+    } else if (lower.includes('game') || lower.includes('gaming') || lower.includes('playstation') || lower.includes('xbox') || lower.includes('nintendo') || lower.includes('controller') || lower.includes('headset')) {
+      category = 'Gaming';
+    } else if (lower.includes('book') || lower.includes('novel') || lower.includes('read') || lower.includes('author') || lower.includes('paperback')) {
+      category = 'Books';
+    } else if (lower.includes('wallet') || lower.includes('sunglass') || lower.includes('bag') || lower.includes('backpack') || lower.includes('belt') || lower.includes('watch') || lower.includes('jewel') || lower.includes('accessories')) {
       category = 'Accessories';
+    } else if (lower.includes('travel') || lower.includes('luggage') || lower.includes('suitcase') || lower.includes('passport') || lower.includes('duffel')) {
+      category = 'Travel';
+    } else if (lower.includes('car') || lower.includes('dashcam') || lower.includes('automotive') || lower.includes('tire') || lower.includes('vehicle') || lower.includes('motor')) {
+      category = 'Automotive';
+    } else if (lower.includes('toy') || lower.includes('lego') || lower.includes('puzzle') || lower.includes('kid') || lower.includes('doll') || lower.includes('board game')) {
+      category = 'Toys';
+    } else if (lower.includes('candle') || lower.includes('planter') || lower.includes('journal') || lower.includes('lifestyle') || lower.includes('diffuser')) {
+      category = 'Lifestyle';
     }
 
     // 2. Detect Currency and Numeric Budget
     let budget: number | undefined;
-    let currency = 'USD';
+    let currency = userCurrency || 'USD';
 
-    if (lower.includes('₹') || lower.includes('inr') || lower.includes('rupee') || lower.includes('rs.')) {
+    if (lower.includes('₹') || lower.includes('inr') || lower.includes('rupee') || lower.includes('rs.') || lower.includes('rs ')) {
       currency = 'INR';
     } else if (lower.includes('€') || lower.includes('eur')) {
       currency = 'EUR';
     } else if (lower.includes('£') || lower.includes('gbp')) {
       currency = 'GBP';
+    } else if (lower.includes('$') || lower.includes('usd')) {
+      currency = 'USD';
+    } else if (lower.includes('¥') || lower.includes('jpy')) {
+      currency = 'JPY';
     }
 
-    // Match numbers after under, below, max, budget, <=, $, ₹
-    const budgetMatch = lower.match(/(?:under|below|max|budget|within|up to|costing|\$|₹|rs\.?)\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?|[0-9]+)/i);
+    // Match numbers after under, below, max, budget, <=, $, ₹, rs
+    const budgetMatch = lower.match(/(?:under|below|max|budget|within|up to|costing|\$|₹|rs\.?|eur|gbp)\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?|[0-9]+)/i);
     if (budgetMatch && budgetMatch[1]) {
       const numStr = budgetMatch[1].replace(/,/g, '');
       budget = parseFloat(numStr);
@@ -120,11 +129,10 @@ Return ONLY valid JSON matching this schema:
     // 3. Extract Preferences
     const preferences: string[] = [];
     const keywords = [
-      'battery life', 'battery', 'noise cancellation', 'anc', 'active noise cancellation',
-      'comfortable', 'cushion', 'ergonomic', 'wireless', 'bluetooth', 'lightweight',
-      'portable', 'waterproof', 'swimproof', 'mechanical', 'backlight', 'rgb',
-      '4k', 'oled', '120hz', 'fast charging', 'usb-c', 'camera', 'gaming', 'programming',
-      'studying', 'travel', 'travelling', 'work', 'office', 'bass'
+      'battery life', 'battery', 'noise cancellation', 'anc', 'wireless', 'bluetooth',
+      'comfortable', 'ergonomic', 'lightweight', 'portable', 'waterproof', 'leather',
+      'cotton', '4k', 'oled', 'fast charging', 'usb-c', 'gaming', 'running', 'espresso',
+      'stainless steel', 'organic', 'vegan', 'spf', 'hydrating', 'mechanical'
     ];
 
     for (const kw of keywords) {
@@ -136,7 +144,9 @@ Return ONLY valid JSON matching this schema:
     // 4. Extract Brand Preferences
     const knownBrands = [
       'Sony', 'Bose', 'Apple', 'Dell', 'Lenovo', 'ASUS', 'Samsung', 'Google',
-      'Logitech', 'Keychron', 'Garmin', 'Anker', 'JBL', 'Canon', 'Razer'
+      'Logitech', 'Keychron', 'Garmin', 'Anker', 'Nike', 'Adidas', 'Zara',
+      'Sephora', 'Breville', 'DeLonghi', 'Nintendo', 'PlayStation', 'Xbox',
+      'Penguin', 'Samsonite', 'Lego', 'Philips', 'Razer'
     ];
     const brand_preference = knownBrands.filter(b => lower.includes(b.toLowerCase()));
 
@@ -156,49 +166,60 @@ Return ONLY valid JSON matching this schema:
   public async rankAndRecommend(
     prompt: string,
     reqs: ShoppingRequirements,
-    products: Product[]
+    products: Product[],
+    budgetLimitUSD: number = 500,
+    remainingBudgetUSD: number = 500
   ): Promise<ProductRecommendation[]> {
     if (products.length === 0) return [];
+
+    const currencyRates: Record<string, number> = {
+      USD: 1.0,
+      INR: 83.0,
+      EUR: 0.92,
+      GBP: 0.79,
+      CAD: 1.36,
+      AUD: 1.52,
+      JPY: 155.0,
+    };
+
+    const targetRate = currencyRates[reqs.currency?.toUpperCase() || 'USD'] || 1.0;
+    // Normalized budget in USD
+    const targetBudgetUSD = reqs.budget ? reqs.budget / targetRate : undefined;
 
     const recommendations: ProductRecommendation[] = products.map(product => {
       let score = 50; // base score
       const reasons: string[] = [];
       const tradeOffs: string[] = [];
+      const productPriceUSD = product.priceUSD || product.price;
 
       // 1. Budget Fit Evaluation
       let budgetFit: ProductRecommendation['budget_fit'] = 'well_within';
-      if (reqs.budget && reqs.budget > 0) {
-        // Handle currency parity approximation if reqs is INR and catalog is USD
-        const effectivePrice = reqs.currency === 'INR' ? product.price * 83 : product.price;
-
-        if (effectivePrice <= reqs.budget * 0.8) {
+      if (targetBudgetUSD && targetBudgetUSD > 0) {
+        if (productPriceUSD <= targetBudgetUSD * 0.8) {
           budgetFit = 'well_within';
-          score += 20;
-          reasons.push(`Budget-Friendly: Priced at $${product.price.toFixed(2)}, comfortably within your limit.`);
-        } else if (effectivePrice <= reqs.budget) {
+          score += 22;
+          reasons.push(`Budget-friendly at $${productPriceUSD.toFixed(2)}, well within your target.`);
+        } else if (productPriceUSD <= targetBudgetUSD) {
           budgetFit = 'at_budget';
-          score += 15;
-          reasons.push(`Perfect Budget Match: Maximizes features right at your limit.`);
-        } else if (effectivePrice <= reqs.budget * 1.15) {
+          score += 18;
+          reasons.push(`Optimal balance of quality and target budget ($${productPriceUSD.toFixed(2)}).`);
+        } else if (productPriceUSD <= targetBudgetUSD * 1.15) {
           budgetFit = 'slightly_over';
           score -= 5;
-          tradeOffs.push(`Slightly above target budget by ~$${(effectivePrice - reqs.budget).toFixed(2)}, but offers superior specs.`);
+          tradeOffs.push(`Slightly above target budget by ~$${(productPriceUSD - targetBudgetUSD).toFixed(2)}, but offers superior specs.`);
         } else {
           budgetFit = 'significantly_over';
           score -= 30;
-          tradeOffs.push(`Exceeds specified budget.`);
+          tradeOffs.push(`Exceeds target budget limit.`);
         }
       }
 
       // 2. Preference Matching
-      const fullText = `${product.name} ${product.description} ${JSON.stringify(product.specifications)}`.toLowerCase();
-      let matchedPrefCount = 0;
-
+      const fullText = `${product.name} ${product.description} ${product.category} ${product.subcategory || ''} ${JSON.stringify(product.specs || product.specifications || {})}`.toLowerCase();
       for (const pref of reqs.preferences) {
         if (fullText.includes(pref.toLowerCase())) {
-          matchedPrefCount++;
-          score += 10;
-          reasons.push(`Matches requirement: "${pref}" verified in product specifications.`);
+          score += 12;
+          reasons.push(`Verified specification match: "${pref}".`);
         }
       }
 
@@ -206,25 +227,35 @@ Return ONLY valid JSON matching this schema:
       if (reqs.brand_preference && reqs.brand_preference.length > 0) {
         if (reqs.brand_preference.some(b => product.brand.toLowerCase() === b.toLowerCase())) {
           score += 15;
-          reasons.push(`Preferred brand: ${product.brand}`);
+          reasons.push(`Preferred brand: ${product.brand}.`);
         }
       }
 
       // 4. Quality & Rating Signal
-      if (product.rating >= 4.5) {
-        score += 8;
-        reasons.push(`High customer satisfaction: Rated ${product.rating}/5.0.`);
+      if (product.rating >= 4.7) {
+        score += 10;
+        reasons.push(`Top customer rating: ${product.rating}★ (${product.reviewCount || 100}+ verified reviews).`);
+      } else if (product.rating >= 4.3) {
+        score += 6;
+        reasons.push(`Highly rated: ${product.rating}★.`);
       }
 
-      // 5. Stock status
+      // 5. Stock check
       if (product.stock_status === 'in_stock') {
         score += 5;
       } else if (product.stock_status === 'low_stock') {
         tradeOffs.push('Limited stock remaining.');
       }
 
-      // Normalize score between 10 and 99
-      const finalScore = Math.min(99, Math.max(15, Math.round(score)));
+      // Budget impact calculation
+      const safeRemaining = Math.max(1, remainingBudgetUSD);
+      const budgetImpactPercentage = Math.min(100, Math.round((productPriceUSD / safeRemaining) * 100));
+      const isOverBudget = productPriceUSD > remainingBudgetUSD;
+
+      const whyThisPick = reasons[0] || `High-value recommendation in ${product.category} with ${product.rating}★ rating.`;
+
+      // Normalize score between 20 and 99
+      const finalScore = Math.min(99, Math.max(20, Math.round(score)));
 
       return {
         product,
@@ -232,6 +263,9 @@ Return ONLY valid JSON matching this schema:
         match_reasons: reasons.slice(0, 4),
         budget_fit: budgetFit,
         trade_offs: tradeOffs.length > 0 ? tradeOffs : undefined,
+        why_this_pick: whyThisPick,
+        budget_impact_percentage: budgetImpactPercentage,
+        is_over_budget: isOverBudget,
       };
     });
 

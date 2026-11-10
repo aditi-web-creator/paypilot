@@ -18,13 +18,15 @@ import {
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
+import { formatMoney } from '../utils/currency';
+import { CATEGORY_PLACEHOLDERS } from '../components/common/ProductCard';
 import { paymentService, CaptureOrderResult } from '../services/paymentService';
 
 export const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const { cart, refreshCart } = useCart();
-  const { currency, user } = useAuth();
+  const { currency, fullName, email } = useSettings();
 
   // Checkout flow states
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
@@ -48,7 +50,8 @@ export const CheckoutPage: React.FC = () => {
       setErrorMessage(null);
       setIsCancelled(false);
 
-      const res = await paymentService.createPayPalOrder(currency || 'USD');
+      // We request USD for reliable PayPal Sandbox execution
+      const res = await paymentService.createPayPalOrder('USD');
       setCreatedOrderId(res.paypalOrderId);
       return res.paypalOrderId;
     } catch (err: any) {
@@ -158,13 +161,18 @@ export const CheckoutPage: React.FC = () => {
               <div>
                 <span className="text-slate-500 block">Total Amount Paid:</span>
                 <span className="font-bold text-slate-900 text-sm">
-                  ${captureResult.amount.toFixed(2)} {captureResult.currency}
+                  {formatMoney(captureResult.amount, currency)}
+                  {currency !== 'USD' && (
+                    <span className="text-xs text-slate-500 font-normal ml-1">
+                      (${captureResult.amount.toFixed(2)} USD)
+                    </span>
+                  )}
                 </span>
               </div>
               <div>
                 <span className="text-slate-500 block">Payer Account:</span>
                 <span className="font-medium text-slate-900">
-                  {captureResult.payer?.name || user?.full_name} ({captureResult.payer?.email_address || user?.email})
+                  {captureResult.payer?.name || fullName} ({captureResult.payer?.email_address || email})
                 </span>
               </div>
             </div>
@@ -182,10 +190,10 @@ export const CheckoutPage: React.FC = () => {
                     <span className="font-semibold text-slate-900 block">
                       {item.product_name_snapshot}
                     </span>
-                    <span className="text-slate-500">Qty: {item.quantity}</span>
+                    <span className="text-slate-500">Qty: {item.quantity} × {formatMoney(item.unit_price, currency)}</span>
                   </div>
                   <span className="font-bold text-slate-900">
-                    ${(item.unit_price * item.quantity).toFixed(2)}
+                    {formatMoney(item.unit_price * item.quantity, currency)}
                   </span>
                 </div>
               ))}
@@ -218,48 +226,60 @@ export const CheckoutPage: React.FC = () => {
               </h3>
 
               <div className="space-y-3 divide-y divide-slate-100 max-h-72 overflow-y-auto">
-                {cart.items.map(item => (
-                  <div key={item.id} className="pt-3 first:pt-0 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
-                        <img
-                          src={item.product?.image_url}
-                          alt={item.product?.name}
-                          className="w-full h-full object-cover"
-                        />
+                {cart.items.map(item => {
+                  const itemPrice = item.unit_price_snapshot;
+                  const categoryFallback = CATEGORY_PLACEHOLDERS[item.product?.category || ''] || CATEGORY_PLACEHOLDERS.Electronics;
+                  return (
+                    <div key={item.id} className="pt-3 first:pt-0 flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
+                          <img
+                            src={item.product?.image_url || item.product?.imageUrl || categoryFallback}
+                            alt={item.product?.name}
+                            className="w-full h-full object-cover"
+                            onError={e => {
+                              (e.currentTarget as HTMLImageElement).src = categoryFallback;
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <h5 className="font-bold text-slate-900">{item.product?.name}</h5>
+                          <span className="text-slate-500">Qty: {item.quantity} × {formatMoney(itemPrice, currency)}</span>
+                        </div>
                       </div>
-                      <div>
-                        <h5 className="font-bold text-slate-900">{item.product?.name}</h5>
-                        <span className="text-slate-500">Qty: {item.quantity} × ${item.unit_price_snapshot.toFixed(2)}</span>
-                      </div>
+                      <span className="font-extrabold text-slate-900">
+                        {formatMoney(itemPrice * item.quantity, currency)}
+                      </span>
                     </div>
-                    <span className="font-extrabold text-slate-900">
-                      ${(item.unit_price_snapshot * item.quantity).toFixed(2)}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Price Breakdown */}
               <div className="pt-3 border-t border-slate-100 text-xs space-y-1.5">
                 <div className="flex justify-between text-slate-600">
                   <span>Subtotal:</span>
-                  <span className="font-semibold text-slate-900">${cart.subtotal.toFixed(2)}</span>
+                  <span className="font-semibold text-slate-900">{formatMoney(cart.subtotal, currency)}</span>
                 </div>
                 <div className="flex justify-between text-slate-600">
                   <span>Shipping:</span>
                   <span className="font-semibold text-slate-900">
-                    {cart.shipping === 0 ? 'FREE' : `$${cart.shipping.toFixed(2)}`}
+                    {cart.shipping === 0 ? 'FREE' : formatMoney(cart.shipping, currency)}
                   </span>
                 </div>
                 <div className="flex justify-between text-slate-600">
                   <span>Tax (8%):</span>
-                  <span className="font-semibold text-slate-900">${cart.tax.toFixed(2)}</span>
+                  <span className="font-semibold text-slate-900">{formatMoney(cart.tax, currency)}</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-slate-100 text-sm font-extrabold text-slate-900">
-                  <span>Authorized Charge:</span>
-                  <span className="text-emerald-800">${cart.total.toFixed(2)} USD</span>
+                  <span>Authorized Total:</span>
+                  <span className="text-emerald-800">{formatMoney(cart.total, currency)}</span>
                 </div>
+                {currency !== 'USD' && (
+                  <p className="text-[11px] text-slate-500 italic text-right mt-1">
+                    Charged via PayPal Sandbox as ${cart.total.toFixed(2)} USD (converted from {formatMoney(cart.total, currency)})
+                  </p>
+                )}
               </div>
             </div>
 

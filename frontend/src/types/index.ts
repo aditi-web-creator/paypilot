@@ -4,17 +4,27 @@ export interface ProductSpecifications {
 
 export interface Product {
   id: string;
+  sku?: string;
   name: string;
   brand: string;
   category: string;
+  subcategory?: string;
   description: string;
   price: number;
-  currency: string;
-  specifications: ProductSpecifications;
+  priceUSD?: number;
+  originalPriceUSD?: number;
+  currency?: string;
+  specifications?: ProductSpecifications;
+  specs?: Record<string, any>;
   image_url: string;
+  imageUrl?: string;
   rating: number;
-  stock_status: 'in_stock' | 'low_stock' | 'out_of_stock';
-  created_at: string;
+  reviewCount?: number;
+  stock?: number;
+  tags?: string[];
+  stock_status?: 'in_stock' | 'low_stock' | 'out_of_stock';
+  created_at?: string;
+  createdAt?: string;
 }
 
 export interface ShoppingRequirements {
@@ -32,6 +42,11 @@ export interface ProductRecommendation {
   match_reasons: string[];
   budget_fit: 'well_within' | 'at_budget' | 'slightly_over' | 'significantly_over';
   trade_offs?: string[];
+  budget_impact_percent?: number;
+  budget_impact_percentage?: number;
+  why_this_pick?: string;
+  is_over_budget?: boolean;
+  cheaper_alternative?: Product;
 }
 
 export interface AgentActivityStep {

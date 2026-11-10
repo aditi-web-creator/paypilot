@@ -21,32 +21,32 @@ describe('PayPilot Backend API Test Suite', () => {
     });
   });
 
-  describe('Catalog & Product Provider (160+ Items across 10 categories)', () => {
-    it('should return 10 distinct categories', async () => {
+  describe('Catalog & Product Provider (360+ Items across 12 categories)', () => {
+    it('should return 12 distinct categories', async () => {
       const res = await request(app).get('/api/products/categories');
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.length).toBeGreaterThanOrEqual(10);
-      expect(res.body.data).toContain('Headphones');
-      expect(res.body.data).toContain('Laptops');
-      expect(res.body.data).toContain('Smartphones');
-      expect(res.body.data).toContain('Keyboards');
+      expect(res.body.data.length).toBe(12);
+      expect(res.body.data).toContain('Electronics');
+      expect(res.body.data).toContain('Fashion');
+      expect(res.body.data).toContain('Gaming');
+      expect(res.body.data).toContain('Home & Kitchen');
     });
 
-    it('should retrieve paginated products with total >= 150', async () => {
+    it('should retrieve paginated products with total >= 360', async () => {
       const res = await request(app).get('/api/products?page=1&limit=20');
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.total).toBeGreaterThanOrEqual(150);
+      expect(res.body.data.total).toBeGreaterThanOrEqual(360);
       expect(res.body.data.products.length).toBe(20);
     });
 
     it('should filter products by category and price range', async () => {
-      const res = await request(app).get('/api/products?category=Headphones&minPrice=30&maxPrice=150');
+      const res = await request(app).get('/api/products?category=Electronics&minPrice=30&maxPrice=150');
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
       res.body.data.products.forEach((p: any) => {
-        expect(p.category).toBe('Headphones');
+        expect(p.category).toBe('Electronics');
         expect(p.price).toBeGreaterThanOrEqual(30);
         expect(p.price).toBeLessThanOrEqual(150);
       });
@@ -86,7 +86,7 @@ describe('PayPilot Backend API Test Suite', () => {
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.category).toBe('Headphones');
+      expect(res.body.data.category).toBe('Electronics');
       expect(res.body.data.budget).toBe(150);
       expect(res.body.data.preferences).toContain('battery life');
     });
@@ -108,7 +108,7 @@ describe('PayPilot Backend API Test Suite', () => {
     });
 
     it('should answer product questions accurately using strictly catalog data', async () => {
-      const allRes = await request(app).get('/api/products?category=Headphones&limit=1');
+      const allRes = await request(app).get('/api/products?category=Electronics&limit=1');
       const sample = allRes.body.data.products[0];
 
       const res = await request(app)
@@ -128,7 +128,8 @@ describe('PayPilot Backend API Test Suite', () => {
     let sampleProduct: any;
 
     beforeAll(async () => {
-      const res = await request(app).get('/api/products?limit=1');
+      // Pick a moderately priced product within budget ($20 - $60) so 2x stays under $500 limit
+      const res = await request(app).get('/api/products?minPrice=20&maxPrice=60&limit=1');
       sampleProduct = res.body.data.products[0];
     });
 

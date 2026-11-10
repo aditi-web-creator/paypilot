@@ -13,7 +13,8 @@ import {
   X,
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
+import { useSettings } from '../../context/SettingsContext';
+import { formatMoney } from '../../utils/currency';
 
 export interface SidebarProps {
   isOpen: boolean;
@@ -22,7 +23,7 @@ export interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { itemCount } = useCart();
-  const { budget } = useAuth();
+  const { monthlyLimitUSD, currency } = useSettings();
 
   const navItems = [
     { to: '/dashboard', label: 'Overview', icon: LayoutDashboard },
@@ -121,7 +122,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           <div className="p-3 rounded-card bg-slate-50 border border-slate-200">
             <div className="flex items-center justify-between text-xs text-slate-500 font-medium mb-1.5">
               <span>Monthly Budget</span>
-              <span className="font-bold text-slate-900">${budget?.budget_limit.toFixed(2) || '500.00'}</span>
+              <span className="font-bold text-slate-900">{formatMoney(monthlyLimitUSD, currency)}</span>
             </div>
             <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
               <div

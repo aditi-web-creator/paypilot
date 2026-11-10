@@ -16,8 +16,11 @@ import {
 } from 'lucide-react';
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
+import { useSettings } from '../context/SettingsContext';
+import { formatMoney } from '../utils/currency';
 
 export const LandingPage: React.FC = () => {
+  const { currency } = useSettings();
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 flex flex-col">
       {/* 1. Navigation Bar */}
@@ -122,7 +125,7 @@ export const LandingPage: React.FC = () => {
                   1. Natural Language Shopping Prompt
                 </div>
                 <div className="p-3 bg-white rounded-lg border border-slate-200 text-xs font-mono text-slate-800 shadow-sm">
-                  "Find wireless headphones for studying and travelling under $150 with active noise cancellation and long battery life."
+                  "Find wireless headphones for studying and travelling under {formatMoney(150, currency)} with active noise cancellation and long battery life."
                 </div>
 
                 <div className="mt-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
@@ -135,7 +138,7 @@ export const LandingPage: React.FC = () => {
                   </div>
                   <div className="p-2 rounded bg-white border border-slate-200">
                     <span className="text-[10px] text-slate-400 block font-bold">BUDGET LIMIT</span>
-                    <span className="font-semibold text-emerald-800">$150.00</span>
+                    <span className="font-semibold text-emerald-800">{formatMoney(150, currency)}</span>
                   </div>
                   <div className="p-2 rounded bg-white border border-slate-200">
                     <span className="text-[10px] text-slate-400 block font-bold">PREFERENCES</span>
@@ -146,7 +149,7 @@ export const LandingPage: React.FC = () => {
 
               <div className="mt-4 flex items-center justify-between text-xs text-slate-500 pt-3 border-t border-slate-200">
                 <span className="flex items-center gap-1.5 text-emerald-700 font-semibold">
-                  <CheckCircle2 className="w-4 h-4" /> 160+ Catalog Products Scored
+                  <CheckCircle2 className="w-4 h-4" /> 380+ Catalog Products Scored
                 </span>
                 <NavLink to="/ai-shopping" className="text-emerald-700 font-bold hover:underline">
                   Launch Interactive Demo →
@@ -174,10 +177,10 @@ export const LandingPage: React.FC = () => {
                       Sony Pro Max 2026 Headphone
                     </h5>
                     <span className="text-sm font-extrabold text-slate-900 block mt-1">
-                      $129.99
+                      {formatMoney(129.99, currency)}
                     </span>
                     <span className="text-[11px] text-emerald-700 font-medium block">
-                      Within authorized $150 limit
+                      Within authorized {formatMoney(150, currency)} limit
                     </span>
                   </div>
                 </div>

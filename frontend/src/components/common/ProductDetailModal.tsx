@@ -5,6 +5,8 @@ import { Button } from './Button';
 import { Badge } from './Badge';
 import { Star, ShoppingCart, MessageSquare, CheckCircle2, ShieldCheck, Truck, RefreshCw } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useSettings } from '../../context/SettingsContext';
+import { formatMoney } from '../../utils/currency';
 import { aiService } from '../../services/aiService';
 
 export interface ProductDetailModalProps {
@@ -21,6 +23,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   onAskInAiChat,
 }) => {
   const { addToCart } = useCart();
+  const { currency } = useSettings();
   const [isAdding, setIsAdding] = useState(false);
   const [added, setAdded] = useState(false);
   const [question, setQuestion] = useState('');
@@ -28,6 +31,10 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const [aiAnswer, setAiAnswer] = useState<string | null>(null);
 
   if (!product) return null;
+
+  const priceUSD = product.priceUSD || product.price;
+  const originalPriceUSD = product.originalPriceUSD;
+  const specs = product.specs || product.specifications || {};
 
   const handleAdd = async () => {
     try {
@@ -60,9 +67,14 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         <div>
           <div className="rounded-xl overflow-hidden bg-slate-100 aspect-square border border-slate-200 shadow-sm relative">
             <img
-              src={product.image_url}
+              src={product.imageUrl || product.image_url}
               alt={product.name}
               className="w-full h-full object-cover"
+              loading="lazy"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src =
+                  'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=600&q=80';
+              }}
             />
             <div className="absolute top-3 left-3">
               <Badge variant="emerald" size="md" className="backdrop-blur bg-white/90">
@@ -97,16 +109,23 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         {/* Right column: Details, Specs & Actions */}
         <div className="flex flex-col justify-between">
           <div>
-            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              {product.brand}
+            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center justify-between">
+              <span>{product.brand}</span>
+              {product.subcategory && (
+                <span className="text-[11px] text-slate-400 font-normal">{product.subcategory}</span>
+              )}
             </div>
             <h2 className="text-xl font-bold text-slate-900 mt-1">{product.name}</h2>
 
             <div className="mt-3 flex items-baseline gap-3">
               <span className="text-2xl font-extrabold text-slate-900">
-                ${product.price.toFixed(2)}
+                {formatMoney(priceUSD, currency)}
               </span>
-              <span className="text-xs text-slate-500 font-medium">USD • Tax calculated at checkout</span>
+              {originalPriceUSD && originalPriceUSD > priceUSD && (
+                <span className="text-sm text-slate-400 line-through">
+                  {formatMoney(originalPriceUSD, currency)}
+                </span>
+              )}
               <Badge
                 variant={product.stock_status === 'in_stock' ? 'success' : 'warning'}
                 size="sm"
@@ -114,6 +133,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 {product.stock_status === 'in_stock' ? 'In Stock' : 'Low Stock'}
               </Badge>
             </div>
+            {currency !== 'USD' && (
+              <span className="text-xs text-slate-500 font-medium block mt-0.5">
+                Stored internally as ${priceUSD.toFixed(2)} USD • Tax calculated at checkout
+              </span>
+            )}
 
             <p className="mt-3 text-sm text-slate-600 leading-relaxed">{product.description}</p>
 
@@ -123,7 +147,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 Verified Technical Specifications
               </h4>
               <div className="border border-slate-200 rounded-lg overflow-hidden divide-y divide-slate-100 text-xs">
-                {Object.entries(product.specifications || {}).map(([key, val]) => (
+                {Object.entries(specs).map(([key, val]) => (
                   <div key={key} className="flex px-3 py-2 bg-white even:bg-slate-50/50">
                     <span className="w-1/3 font-medium text-slate-500 capitalize">
                       {key.replace(/_/g, ' ')}
@@ -174,7 +198,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 }}
                 icon={<MessageSquare className="w-4 h-4 text-emerald-700" />}
               >
-                Discuss with AI Copilot
+                Discuss with AI
               </Button>
             )}
 
@@ -186,7 +210,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               icon={added ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <ShoppingCart className="w-4 h-4" />}
               className="flex-1"
             >
-              {added ? 'Added to Cart' : `Add to Cart — $${product.price.toFixed(2)}`}
+              {added ? 'Added to Cart' : `Add to Cart — ${formatMoney(priceUSD, currency)}`}
             </Button>
           </div>
         </div>

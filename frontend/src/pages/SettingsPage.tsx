@@ -1,35 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   User,
   Shield,
-  CreditCard,
   Bell,
   CheckCircle2,
-  Lock,
   Globe,
-  Sliders,
+  ShoppingBag,
   Sparkles,
 } from 'lucide-react';
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
-import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
+import {
+  SUPPORTED_CURRENCIES,
+  getCurrencySymbol,
+  convertFromUSD,
+  convertToUSD,
+  getExchangeRate,
+} from '../utils/currency';
 
 export const SettingsPage: React.FC = () => {
-  const { user, budget, currency, setCurrency, updateBudgetLimit } = useAuth();
+  const {
+    fullName: storedName,
+    email: storedEmail,
+    currency,
+    monthlyLimitUSD,
+    updateSettings,
+    setCurrency,
+    loadDemoCart,
+  } = useSettings();
 
-  const [fullName, setFullName] = useState(user?.full_name || 'Alex Mercer');
-  const [email, setEmail] = useState(user?.email || 'demo.shopper@paypilot.ai');
-  const [budgetVal, setBudgetVal] = useState(String(budget?.budget_limit || '500'));
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [formName, setFormName] = useState(storedName);
+  const [formEmail, setFormEmail] = useState(storedEmail);
+  const [formLimitInCurr, setFormLimitInCurr] = useState(
+    String(Math.round(convertFromUSD(monthlyLimitUSD, currency)))
+  );
+  const [isLoadingDemoCart, setIsLoadingDemoCart] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  // Sync input when currency or stored values change
+  useEffect(() => {
+    setFormName(storedName);
+    setFormEmail(storedEmail);
+    setFormLimitInCurr(String(Math.round(convertFromUSD(monthlyLimitUSD, currency))));
+  }, [storedName, storedEmail, currency, monthlyLimitUSD]);
+
+  const activeSymbol = getCurrencySymbol(currency);
+  const activeRate = getExchangeRate(currency);
+  const numericLimitInCurr = parseFloat(formLimitInCurr) || 0;
+  const calculatedUSD = convertToUSD(numericLimitInCurr, currency);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (parseFloat(budgetVal) > 0) {
-      await updateBudgetLimit(parseFloat(budgetVal));
-    }
+    const parsedLimit = parseFloat(formLimitInCurr);
+    const validLimitUSD = !isNaN(parsedLimit) && parsedLimit > 0
+      ? convertToUSD(parsedLimit, currency)
+      : monthlyLimitUSD;
+
+    await updateSettings({
+      fullName: formName.trim() || storedName,
+      email: formEmail.trim() || storedEmail,
+      monthlyLimitUSD: Math.round(validLimitUSD * 100) / 100,
+    });
+
     setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 2000);
+    setTimeout(() => setSavedSuccess(false), 2500);
+  };
+
+  const handleLoadDemoCart = async () => {
+    setIsLoadingDemoCart(true);
+    try {
+      await loadDemoCart();
+    } finally {
+      setIsLoadingDemoCart(false);
+    }
   };
 
   return (
@@ -39,12 +83,12 @@ export const SettingsPage: React.FC = () => {
         <div>
           <h2 className="text-xl font-extrabold text-slate-900">Application Settings</h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Manage your personal profile, preferred currency, financial guardrails, and demo status.
+            Manage your personal profile, preferred currency, financial guardrails, and demo state.
           </p>
         </div>
 
         <Badge variant="emerald" size="md">
-          Sandbox Mode
+          PayPal Sandbox Mode
         </Badge>
       </div>
 
@@ -63,19 +107,23 @@ export const SettingsPage: React.FC = () => {
               <label className="font-semibold text-slate-700 block mb-1">Full Name</label>
               <input
                 type="text"
-                value={fullName}
-                onChange={e => setFullName(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50/50"
+                value={formName}
+                onChange={e => setFormName(e.target.value)}
+                placeholder="e.g. Aditi Sharma"
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50/50 text-slate-900 font-medium"
               />
+              <span className="text-[11px] text-slate-400 mt-1 block">
+                Instantly updates avatar initial, greetings, AI chats, and order receipts.
+              </span>
             </div>
 
             <div>
               <label className="font-semibold text-slate-700 block mb-1">Email Address</label>
               <input
                 type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50/50"
+                value={formEmail}
+                onChange={e => setFormEmail(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50/50 text-slate-900 font-medium"
               />
             </div>
           </div>
@@ -86,69 +134,73 @@ export const SettingsPage: React.FC = () => {
           <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
             <Globe className="w-4 h-4 text-emerald-700" />
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-              Fintech Preferences
+              Fintech & Currency Preferences
             </h3>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">Preferred Currency</label>
+              <label className="font-semibold text-slate-700 block mb-1">Preferred Display Currency</label>
               <select
                 value={currency}
                 onChange={e => setCurrency(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50/50 text-slate-800 font-semibold"
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50/50 text-slate-900 font-bold cursor-pointer"
               >
-                <option value="USD">USD ($) — Universally Supported Sandbox Currency</option>
-                <option value="INR">INR (₹) — Indian Rupee</option>
-                <option value="EUR">EUR (€) — Euro</option>
-                <option value="GBP">GBP (£) — British Pound</option>
+                {SUPPORTED_CURRENCIES.map(c => (
+                  <option key={c.code} value={c.code}>
+                    {c.code} ({c.symbol}) — {c.name}
+                  </option>
+                ))}
               </select>
               <span className="text-[11px] text-slate-500 mt-1 block">
-                PayPal Sandbox transactions operate with consistent currency conversion.
+                All catalog prices and budgets sync instantly across the entire application.
               </span>
             </div>
 
             <div>
-              <label className="font-semibold text-slate-700 block mb-1">Default Monthly Spending Limit</label>
+              <label className="font-semibold text-slate-700 block mb-1">
+                Default Monthly Spending Limit ({currency})
+              </label>
               <div className="relative">
-                <span className="absolute left-3 top-2 font-bold text-slate-400">$</span>
+                <span className="absolute left-3 top-2 font-bold text-slate-500">{activeSymbol}</span>
                 <input
                   type="number"
-                  value={budgetVal}
-                  onChange={e => setBudgetVal(e.target.value)}
-                  className="w-full pl-7 pr-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50/50 font-bold"
+                  min="1"
+                  step="any"
+                  value={formLimitInCurr}
+                  onChange={e => setFormLimitInCurr(e.target.value)}
+                  className="w-full pl-8 pr-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 bg-slate-50/50 font-bold text-slate-900"
                 />
               </div>
-              <span className="text-[11px] text-slate-500 mt-1 block">
-                Enforced server-side before creating any PayPal Sandbox order.
+              <span className="text-[11px] text-emerald-700 font-semibold mt-1 block">
+                Stored internally as ${calculatedUSD.toFixed(2)} USD (Rate: 1 USD = {activeRate} {currency})
               </span>
             </div>
           </div>
         </div>
 
-        {/* Notification Preferences */}
-        <div className="bg-white p-6 rounded-card border border-slate-200 shadow-subtle space-y-4">
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-            <Bell className="w-4 h-4 text-emerald-700" />
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-              Notifications & Warnings
-            </h3>
+        {/* Demo Fast-Action Card */}
+        <div className="bg-emerald-50/70 p-6 rounded-card border border-emerald-200 shadow-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+              <ShoppingBag className="w-4 h-4 text-emerald-700" />
+              Demo Quick-Start: Preload Curated Items
+            </span>
+            <p className="text-[11px] text-emerald-800">
+              Need to test checkout quickly for judges? Populate your shopping cart with 2 top-rated products.
+            </p>
           </div>
 
-          <div className="flex items-center justify-between text-xs py-2">
-            <div>
-              <span className="font-semibold text-slate-900 block">Budget Exceeded Alerts</span>
-              <span className="text-slate-500">
-                Warn me in the split-screen view when selected items exceed my monthly ceiling.
-              </span>
-            </div>
-            <input
-              type="checkbox"
-              checked={notificationsEnabled}
-              onChange={e => setNotificationsEnabled(e.target.checked)}
-              className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500"
-            />
-          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleLoadDemoCart}
+            disabled={isLoadingDemoCart}
+            className="shrink-0 bg-white hover:bg-emerald-100 border-emerald-300 text-emerald-900 text-xs font-bold"
+          >
+            {isLoadingDemoCart ? 'Loading Cart...' : 'Load Demo Cart'}
+          </Button>
         </div>
 
         {/* PayPal Developer Diagnostics (Read-Only) */}
@@ -172,20 +224,20 @@ export const SettingsPage: React.FC = () => {
               <span className="font-mono text-slate-800">Orders API v2 (Intent: CAPTURE)</span>
             </div>
           </div>
-          <span className="text-[11px] text-slate-400 block">
-            Client Secret is stored only on the backend server environment. Never exposed to the browser.
+          <span className="text-[11px] text-slate-500 block">
+            Direct charges are converted and authorized in PayPal-compatible USD to prevent sandbox decline.
           </span>
         </div>
 
         {/* Save CTA */}
         <div className="flex items-center justify-between pt-2">
           {savedSuccess && (
-            <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
+            <span className="text-xs font-bold text-emerald-700 flex items-center gap-1 animate-fade-in">
               <CheckCircle2 className="w-4 h-4" />
               Settings saved successfully!
             </span>
           )}
-          <Button type="submit" size="md" className="ml-auto">
+          <Button type="submit" size="md" className="ml-auto font-semibold">
             Save Changes
           </Button>
         </div>

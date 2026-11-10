@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { SettingsProvider } from './context/SettingsContext';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { AppLayout } from './layouts/AppLayout';
@@ -17,9 +18,10 @@ import { HelpGuidePage } from './pages/HelpGuidePage';
 
 export const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <BrowserRouter>
+    <SettingsProvider>
+      <AuthProvider>
+        <CartProvider>
+          <BrowserRouter>
           <Routes>
             {/* Public Landing Page */}
             <Route path="/" element={<LandingPage />} />
@@ -43,6 +45,7 @@ export const App: React.FC = () => {
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>
+    </SettingsProvider>
   );
 };
 

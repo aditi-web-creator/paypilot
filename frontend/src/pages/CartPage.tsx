@@ -8,28 +8,27 @@ import {
   ArrowRight,
   ShieldCheck,
   AlertCircle,
-  Truck,
   RotateCcw,
   Bot,
 } from 'lucide-react';
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import { cartService } from '../services/cartService';
+import { formatMoney } from '../utils/currency';
 
 export const CartPage: React.FC = () => {
   const navigate = useNavigate();
-  const { cart, updateQuantity, removeItem, clearCart, refreshCart } = useCart();
-  const { budget } = useAuth();
+  const { cart, updateQuantity, removeItem, clearCart } = useCart();
+  const { currency, monthlyLimitUSD } = useSettings();
 
   const [isValidating, setIsValidating] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  const budgetLimit = budget?.budget_limit || 500;
-  const cartTotal = cart?.total || 0;
-  const isOverBudget = cartTotal > budgetLimit;
-  const remainingAfterPurchase = budgetLimit - cartTotal;
+  const cartTotalUSD = cart?.total || 0;
+  const isOverBudget = cartTotalUSD > monthlyLimitUSD;
+  const remainingAfterPurchaseUSD = monthlyLimitUSD - cartTotalUSD;
 
   const handleProceedToCheckout = async () => {
     try {
@@ -54,11 +53,11 @@ export const CartPage: React.FC = () => {
     return (
       <div className="bg-white rounded-card border border-slate-200 p-12 text-center max-w-2xl mx-auto shadow-subtle my-8">
         <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mx-auto mb-4">
-          <ShoppingBag className="w-8 h-8" />
+          <ShoppingBag className="w-8 h-8 text-emerald-700" />
         </div>
         <h3 className="text-xl font-bold text-slate-900">Your shopping cart is empty</h3>
         <p className="text-xs text-slate-500 mt-2 max-w-md mx-auto leading-relaxed">
-          Ask PayPilot AI to curate products based on your needs, or explore our full 160-item catalog.
+          Ask PayPilot AI to find products tailored to your preferences, or explore the catalog across 12 categories.
         </p>
 
         <div className="mt-6 flex justify-center gap-3">
@@ -101,84 +100,96 @@ export const CartPage: React.FC = () => {
         {/* Cart Items List (~65%) */}
         <div className="lg:col-span-8 space-y-4">
           <div className="bg-white rounded-card border border-slate-200 shadow-subtle overflow-hidden divide-y divide-slate-100">
-            {cart.items.map(item => (
-              <div key={item.id} className="p-4 sm:p-5 flex items-start gap-4">
-                {/* Thumbnail */}
-                <div className="w-20 h-20 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
-                  <img
-                    src={item.product?.image_url}
-                    alt={item.product?.name || 'Product'}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+            {cart.items.map(item => {
+              const itemTotalUSD = item.unit_price_snapshot * item.quantity;
+              const productImg = item.product?.imageUrl || item.product?.image_url;
 
-                {/* Details */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                        {item.product?.brand || 'Brand'}
-                      </span>
-                      <h4 className="text-sm font-bold text-slate-900 leading-snug">
-                        {item.product?.name || 'Catalog Item'}
-                      </h4>
-                      <span className="text-xs text-slate-500 block mt-0.5">
-                        Category: {item.product?.category}
-                      </span>
-                    </div>
-
-                    <div className="text-right flex-shrink-0">
-                      <span className="text-base font-extrabold text-slate-900 block">
-                        ${(item.unit_price_snapshot * item.quantity).toFixed(2)}
-                      </span>
-                      <span className="text-[11px] text-slate-500 block">
-                        ${item.unit_price_snapshot.toFixed(2)} each
-                      </span>
-                    </div>
+              return (
+                <div key={item.id} className="p-4 sm:p-5 flex items-start gap-4">
+                  {/* Thumbnail */}
+                  <div className="w-20 h-20 rounded-lg bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
+                    <img
+                      src={productImg || 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=600&q=80'}
+                      alt={item.product?.name || 'Product'}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=600&q=80';
+                      }}
+                    />
                   </div>
 
-                  {/* Quantity controls and remove */}
-                  <div className="mt-4 flex items-center justify-between">
-                    <div className="flex items-center gap-1 border border-slate-200 rounded-lg p-0.5 bg-slate-50">
-                      <button
-                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                        disabled={item.quantity <= 1}
-                        className="p-1 rounded text-slate-500 hover:text-slate-900 disabled:opacity-40"
-                      >
-                        <Minus className="w-3.5 h-3.5" />
-                      </button>
-                      <span className="w-8 text-center text-xs font-bold text-slate-900">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="p-1 rounded text-slate-500 hover:text-slate-900"
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                      </button>
+                  {/* Details */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                          {item.product?.brand || 'Brand'}
+                        </span>
+                        <h4 className="text-sm font-bold text-slate-900 leading-snug">
+                          {item.product?.name || 'Catalog Item'}
+                        </h4>
+                        <span className="text-xs text-slate-500 block mt-0.5">
+                          Category: {item.product?.category}
+                          {item.product?.subcategory ? ` • ${item.product.subcategory}` : ''}
+                        </span>
+                      </div>
+
+                      <div className="text-right shrink-0">
+                        <span className="text-base font-extrabold text-slate-900 block">
+                          {formatMoney(itemTotalUSD, currency)}
+                        </span>
+                        <span className="text-[11px] text-slate-500 block">
+                          {formatMoney(item.unit_price_snapshot, currency)} each
+                        </span>
+                      </div>
                     </div>
 
-                    <button
-                      onClick={() => removeItem(item.id)}
-                      className="text-xs text-rose-600 hover:text-rose-800 font-semibold flex items-center gap-1 transition-colors"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>Remove</span>
-                    </button>
+                    {/* Quantity controls and remove */}
+                    <div className="mt-4 flex items-center justify-between">
+                      <div className="flex items-center gap-1 border border-slate-200 rounded-lg p-0.5 bg-slate-50">
+                        <button
+                          onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                          disabled={item.quantity <= 1}
+                          className="p-1 rounded text-slate-500 hover:text-slate-900 disabled:opacity-40"
+                          title="Decrease quantity"
+                        >
+                          <Minus className="w-3.5 h-3.5" />
+                        </button>
+                        <span className="w-8 text-center text-xs font-bold text-slate-900">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="p-1 rounded text-slate-500 hover:text-slate-900"
+                          title="Increase quantity"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="text-xs text-rose-600 hover:text-rose-800 font-semibold flex items-center gap-1 transition-colors"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Remove</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          {/* Fintech Security Notice */}
+          {/* Security Notice */}
           <div className="p-4 rounded-card bg-emerald-50/50 border border-emerald-200/80 flex items-start gap-3 text-xs text-emerald-950">
-            <ShieldCheck className="w-5 h-5 text-emerald-700 flex-shrink-0 mt-0.5" />
+            <ShieldCheck className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
             <div>
               <span className="font-bold text-emerald-900 block">Server-Verified Price Guarantee</span>
               <p className="mt-0.5 text-slate-700 leading-relaxed">
-                All item prices and taxes are recalculated and snapshotted on the server. The AI cannot
-                tamper with payment amounts or authorize payments without your explicit review.
+                All item prices and taxes are calculated on the server. The AI cannot tamper with payment amounts or authorize payments without your manual confirmation.
               </p>
             </div>
           </div>
@@ -195,7 +206,7 @@ export const CartPage: React.FC = () => {
             <div className="space-y-2 text-xs divide-y divide-slate-100">
               <div className="flex justify-between py-1 text-slate-600">
                 <span>Subtotal ({cart.items.reduce((s, i) => s + i.quantity, 0)} items)</span>
-                <span className="font-semibold text-slate-900">${cart.subtotal.toFixed(2)}</span>
+                <span className="font-semibold text-slate-900">{formatMoney(cart.subtotal, currency)}</span>
               </div>
               <div className="flex justify-between py-1 text-slate-600">
                 <span className="flex items-center gap-1">
@@ -203,29 +214,34 @@ export const CartPage: React.FC = () => {
                   {cart.shipping === 0 && <Badge variant="success" size="sm">FREE</Badge>}
                 </span>
                 <span className="font-semibold text-slate-900">
-                  {cart.shipping === 0 ? '$0.00' : `$${cart.shipping.toFixed(2)}`}
+                  {cart.shipping === 0 ? 'FREE' : formatMoney(cart.shipping, currency)}
                 </span>
               </div>
               <div className="flex justify-between py-1 text-slate-600">
                 <span>Estimated Tax (8%)</span>
-                <span className="font-semibold text-slate-900">${cart.tax.toFixed(2)}</span>
+                <span className="font-semibold text-slate-900">{formatMoney(cart.tax, currency)}</span>
               </div>
               <div className="flex justify-between pt-2 text-sm font-extrabold text-slate-900">
                 <span>Final Order Amount</span>
-                <span className="text-base text-emerald-800">${cart.total.toFixed(2)} USD</span>
+                <span className="text-base text-emerald-800">{formatMoney(cart.total, currency)}</span>
               </div>
+              {currency !== 'USD' && (
+                <div className="text-[11px] text-slate-400 text-right pt-1">
+                  (Internal authorization: ${cart.total.toFixed(2)} USD)
+                </div>
+              )}
             </div>
 
             {/* Budget Guardrail Meter */}
-            <div className="pt-3 border-t border-slate-100">
-              <div className="flex items-center justify-between text-xs mb-1">
+            <div className="pt-3 border-t border-slate-100 space-y-2">
+              <div className="flex items-center justify-between text-xs">
                 <span className="text-slate-500 font-semibold">Monthly Spending Cap:</span>
-                <span className="font-bold text-slate-900">${budgetLimit.toFixed(2)}</span>
+                <span className="font-bold text-slate-900">{formatMoney(monthlyLimitUSD, currency)}</span>
               </div>
-              <div className="flex items-center justify-between text-xs mb-2">
+              <div className="flex items-center justify-between text-xs">
                 <span className="text-slate-500">Remaining After Purchase:</span>
                 <span className={`font-bold ${isOverBudget ? 'text-rose-600' : 'text-emerald-700'}`}>
-                  ${remainingAfterPurchase.toFixed(2)}
+                  {formatMoney(remainingAfterPurchaseUSD, currency)}
                 </span>
               </div>
 
@@ -237,13 +253,13 @@ export const CartPage: React.FC = () => {
                   </div>
                   <p className="text-[11px] leading-relaxed">
                     This order would exceed your authorized monthly limit by{' '}
-                    <strong>${(cartTotal - budgetLimit).toFixed(2)}</strong>. Reduce quantities, remove
+                    <strong>{formatMoney(cartTotalUSD - monthlyLimitUSD, currency)}</strong>. Reduce quantities, remove
                     items, or increase your budget in Settings.
                   </p>
                 </div>
               ) : (
                 <div className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Approved: Order fits comfortably within your monthly limit.</span>
                 </div>
               )}
@@ -252,7 +268,7 @@ export const CartPage: React.FC = () => {
             {/* Validation Error Message */}
             {validationError && (
               <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-800 flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
                 <span>{validationError}</span>
               </div>
             )}
@@ -264,7 +280,7 @@ export const CartPage: React.FC = () => {
               disabled={isOverBudget || isValidating}
               isLoading={isValidating}
               onClick={handleProceedToCheckout}
-              className="w-full shadow-md"
+              className="w-full shadow-md font-bold"
               icon={<ArrowRight className="w-4 h-4" />}
             >
               Proceed to PayPal Checkout

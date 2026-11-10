@@ -12,6 +12,8 @@ import {
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
+import { formatMoney, convertFromUSD, convertToUSD, getCurrencySymbol } from '../utils/currency';
 import { budgetService } from '../services/orderService';
 import { SpendingSummary } from '../types';
 import {
@@ -29,26 +31,31 @@ import {
 } from 'recharts';
 
 export const BudgetPage: React.FC = () => {
-  const { budget, updateBudgetLimit, currency } = useAuth();
+  const { updateBudgetLimit } = useAuth();
+  const { currency, monthlyLimitUSD, updateSettings } = useSettings();
   const [summary, setSummary] = useState<SpendingSummary | null>(null);
-  const [newLimit, setNewLimit] = useState<string>('500');
+  const [newLimit, setNewLimit] = useState<string>(() =>
+    String(Math.round(convertFromUSD(monthlyLimitUSD, currency)))
+  );
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
+
+  // Sync input value whenever currency or monthlyLimitUSD changes
+  useEffect(() => {
+    setNewLimit(String(Math.round(convertFromUSD(monthlyLimitUSD, currency))));
+  }, [currency, monthlyLimitUSD]);
 
   useEffect(() => {
     async function loadSummary() {
       try {
         const res = await budgetService.getBudgetAndSummary();
         setSummary(res.summary);
-        if (res.budget) {
-          setNewLimit(String(res.budget.budget_limit));
-        }
       } catch (err) {
         console.error('Failed to load budget summary:', err);
       }
     }
     loadSummary();
-  }, [budget]);
+  }, [monthlyLimitUSD]);
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +64,9 @@ export const BudgetPage: React.FC = () => {
 
     try {
       setIsUpdating(true);
-      await updateBudgetLimit(val);
+      const usdVal = convertToUSD(val, currency);
+      await updateSettings({ monthlyLimitUSD: usdVal });
+      await updateBudgetLimit(usdVal);
       setUpdateSuccess(true);
       setTimeout(() => setUpdateSuccess(false), 2500);
     } finally {
@@ -79,7 +88,7 @@ export const BudgetPage: React.FC = () => {
       ];
 
   const totalSpent = summary?.total_spent || 0;
-  const currentLimit = budget?.budget_limit || 500;
+  const currentLimit = monthlyLimitUSD;
   const remaining = Math.max(0, currentLimit - totalSpent);
   const percentUsed = Math.min(100, Math.round((totalSpent / (currentLimit || 1)) * 100));
 
@@ -107,7 +116,7 @@ export const BudgetPage: React.FC = () => {
             Approved Limit
           </span>
           <span className="text-2xl font-extrabold text-slate-900 mt-1 block">
-            ${currentLimit.toFixed(2)} {currency}
+            {formatMoney(currentLimit, currency)}
           </span>
           <span className="text-[11px] text-slate-500 mt-1 block">
             Enforced ceiling across all cart sessions
@@ -119,7 +128,7 @@ export const BudgetPage: React.FC = () => {
             Total Spent
           </span>
           <span className="text-2xl font-extrabold text-slate-900 mt-1 block">
-            ${totalSpent.toFixed(2)} {currency}
+            {formatMoney(totalSpent, currency)}
           </span>
           <span className="text-[11px] text-slate-500 mt-1 block">
             {percentUsed}% of authorized cap utilized
@@ -131,7 +140,7 @@ export const BudgetPage: React.FC = () => {
             Remaining Runway
           </span>
           <span className="text-2xl font-extrabold text-emerald-700 mt-1 block">
-            ${remaining.toFixed(2)} {currency}
+            {formatMoney(remaining, currency)}
           </span>
           <span className="text-[11px] text-slate-500 mt-1 block">
             Safe spending balance remaining
@@ -150,29 +159,36 @@ export const BudgetPage: React.FC = () => {
           cart exceeds your authorized allowance, checkout will be automatically blocked.
         </p>
 
-        <form onSubmit={handleUpdate} className="flex flex-wrap items-center gap-3">
-          <div className="relative">
-            <span className="absolute left-3 top-2.5 text-xs font-bold text-slate-400">$</span>
-            <input
-              type="number"
-              min="10"
-              step="10"
-              value={newLimit}
-              onChange={e => setNewLimit(e.target.value)}
-              className="pl-7 pr-3 py-2 rounded-lg border border-slate-300 text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-emerald-500 w-44"
-            />
+        <form onSubmit={handleUpdate} className="space-y-2">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="relative">
+              <span className="absolute left-3 top-2.5 text-xs font-bold text-slate-500">
+                {getCurrencySymbol(currency)}
+              </span>
+              <input
+                type="number"
+                min="1"
+                step="1"
+                value={newLimit}
+                onChange={e => setNewLimit(e.target.value)}
+                className="pl-7 pr-3 py-2 rounded-lg border border-slate-300 text-sm font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-emerald-500 w-44"
+              />
+            </div>
+
+            <Button type="submit" size="md" isLoading={isUpdating}>
+              Save New Limit
+            </Button>
+
+            {updateSuccess && (
+              <span className="text-xs font-bold text-emerald-700 flex items-center gap-1 animate-fadeIn">
+                <CheckCircle2 className="w-4 h-4" />
+                Budget successfully updated in database!
+              </span>
+            )}
           </div>
-
-          <Button type="submit" size="md" isLoading={isUpdating}>
-            Save New Limit
-          </Button>
-
-          {updateSuccess && (
-            <span className="text-xs font-bold text-emerald-700 flex items-center gap-1 animate-fadeIn">
-              <CheckCircle2 className="w-4 h-4" />
-              Budget successfully updated in database!
-            </span>
-          )}
+          <span className="text-[11px] text-slate-400 block">
+            Stored internally as ${convertToUSD(parseFloat(newLimit) || 0, currency).toFixed(2)} USD • Enforced strictly by backend
+          </span>
         </form>
       </div>
 
@@ -200,7 +216,7 @@ export const BudgetPage: React.FC = () => {
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(val: any) => [`$${Number(val).toFixed(2)}`, 'Amount']}
+                  formatter={(val: any) => [formatMoney(Number(val), currency), 'Amount']}
                   contentStyle={{ borderRadius: '8px', fontSize: '11px' }}
                 />
               </PieChart>
@@ -217,9 +233,9 @@ export const BudgetPage: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#64748B' }} />
-                <YAxis tick={{ fontSize: 11, fill: '#64748B' }} tickFormatter={v => `$${v}`} />
+                <YAxis tick={{ fontSize: 11, fill: '#64748B' }} tickFormatter={v => formatMoney(v, currency)} />
                 <Tooltip
-                  formatter={(val: any) => [`$${Number(val).toFixed(2)}`, 'Spent']}
+                  formatter={(val: any) => [formatMoney(Number(val), currency), 'Spent']}
                   contentStyle={{ borderRadius: '8px', fontSize: '11px' }}
                 />
                 <Bar dataKey="amount" fill="#047857" radius={[4, 4, 0, 0]} />

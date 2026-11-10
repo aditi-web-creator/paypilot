@@ -16,8 +16,11 @@ import { Badge } from '../components/common/Badge';
 import { Modal } from '../components/common/Modal';
 import { orderService } from '../services/orderService';
 import { Order } from '../types';
+import { useSettings } from '../context/SettingsContext';
+import { formatMoney } from '../utils/currency';
 
 export const OrderHistoryPage: React.FC = () => {
+  const { currency } = useSettings();
   const [orders, setOrders] = useState<Order[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -129,7 +132,7 @@ export const OrderHistoryPage: React.FC = () => {
                       {new Date(order.created_at).toLocaleString()}
                     </td>
                     <td className="p-3.5 font-extrabold text-slate-900">
-                      ${order.total_amount.toFixed(2)} {order.currency}
+                      {formatMoney(order.total_amount, currency)}
                     </td>
                     <td className="p-3.5">
                       <Badge variant={getStatusBadgeVariant(order.payment_status)} size="sm">
@@ -207,10 +210,10 @@ export const OrderHistoryPage: React.FC = () => {
                   <div key={item.id} className="p-2.5 flex items-center justify-between">
                     <div>
                       <span className="font-semibold text-slate-900 block">{item.product_name_snapshot}</span>
-                      <span className="text-slate-500">Qty: {item.quantity} × ${item.unit_price.toFixed(2)}</span>
+                      <span className="text-slate-500">Qty: {item.quantity} × {formatMoney(item.unit_price, currency)}</span>
                     </div>
                     <span className="font-bold text-slate-900">
-                      ${(item.unit_price * item.quantity).toFixed(2)}
+                      {formatMoney(item.unit_price * item.quantity, currency)}
                     </span>
                   </div>
                 ))}
@@ -219,7 +222,14 @@ export const OrderHistoryPage: React.FC = () => {
 
             <div className="pt-2 border-t border-slate-200 flex justify-between text-sm font-extrabold text-slate-900">
               <span>Total Paid via PayPal:</span>
-              <span className="text-emerald-800">${selectedOrder.total_amount.toFixed(2)} {selectedOrder.currency}</span>
+              <span className="text-emerald-800">
+                {formatMoney(selectedOrder.total_amount, currency)}
+                {currency !== 'USD' && (
+                  <span className="text-xs text-slate-500 font-normal ml-1">
+                    (${selectedOrder.total_amount.toFixed(2)} USD)
+                  </span>
+                )}
+              </span>
             </div>
           </div>
         </Modal>
