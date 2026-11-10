@@ -33,8 +33,13 @@ export async function request<T>(endpoint: string, options: RequestInit = {}): P
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
+    const fallbackMessage =
+      response.status === 500 || response.status === 502 || response.status === 503
+        ? 'Cannot connect to PayPilot backend on port 5000. Please ensure "npm run dev" is running from the project root.'
+        : `HTTP ${response.status}: ${response.statusText}`;
+
     throw new ApiError(
-      data.error || `HTTP ${response.status}: ${response.statusText}`,
+      data.error || fallbackMessage,
       response.status,
       data.details
     );

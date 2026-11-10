@@ -14,9 +14,24 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
+        configure: (proxy) => {
+          proxy.on('error', (err, _req, res: any) => {
+            console.error('[Vite Proxy Error]: Backend is unreachable on 127.0.0.1:5000', err.message);
+            if (res && !res.headersSent) {
+              res.writeHead(503, { 'Content-Type': 'application/json' });
+              res.end(
+                JSON.stringify({
+                  success: false,
+                  error:
+                    'Backend server is not running on port 5000. Please run "npm run dev" from the project root.',
+                })
+              );
+            }
+          });
+        },
       },
     },
   },
