@@ -1,4 +1,5 @@
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -65,7 +66,9 @@ export class LocalDatabaseProvider implements IDatabaseProvider {
   private store: LocalStoreData;
 
   constructor() {
-    const dataDir = path.resolve(process.cwd(), 'data');
+    const dataDir = process.env.VERCEL
+      ? path.join(os.tmpdir(), 'paypilot-data')
+      : path.resolve(process.cwd(), 'data');
     if (!fs.existsSync(dataDir)) {
       try {
         fs.mkdirSync(dataDir, { recursive: true });

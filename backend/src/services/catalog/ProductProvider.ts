@@ -1,7 +1,33 @@
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import { PrismaClient } from '@prisma/client';
 import { Product } from '../../types/index.js';
 
-const prisma = new PrismaClient();
+function createPrismaClient(): PrismaClient {
+  if (process.env.VERCEL) {
+    const tmpDbPath = path.join(os.tmpdir(), 'paypilot-dev.db');
+    if (!fs.existsSync(tmpDbPath)) {
+      const candidates = [
+        path.resolve(__dirname, '../../../prisma/dev.db'),
+        path.resolve(process.cwd(), 'backend/prisma/dev.db'),
+        path.resolve(process.cwd(), 'prisma/dev.db'),
+      ];
+      const sourceDb = candidates.find(p => fs.existsSync(p));
+      if (sourceDb) {
+        fs.copyFileSync(sourceDb, tmpDbPath);
+      }
+    }
+    return new PrismaClient({
+      datasources: {
+        db: { url: `file:${tmpDbPath}` },
+      },
+    });
+  }
+  return new PrismaClient();
+}
+
+const prisma = createPrismaClient();
 
 export interface ProductQueryOptions {
   q?: string;
@@ -224,7 +250,7 @@ export class DatabaseProductProvider implements IProductProvider {
     });
 
     const subMap: Record<string, Set<string>> = {};
-    rows.forEach(r => {
+    rows.forEach((r: { category: string; subcategory: string }) => {
       if (!subMap[r.category]) subMap[r.category] = new Set();
       if (r.subcategory) subMap[r.category].add(r.subcategory);
     });
@@ -254,7 +280,7 @@ export class DatabaseProductProvider implements IProductProvider {
       distinct: ['brand'],
       orderBy: { brand: 'asc' },
     });
-    return rows.map(r => r.brand);
+    return rows.map((r: { brand: string }) => r.brand);
   }
 
   public async searchProducts(query: string, maxResults: number = 8): Promise<Product[]> {
@@ -285,7 +311,7 @@ export class DatabaseProductProvider implements IProductProvider {
     });
 
     // Score candidates based on match relevance
-    const scored = candidates.map(row => {
+    const scored = candidates.map((row: any) => {
       const p = mapPrismaProduct(row);
       let score = 0;
       const text = `${p.name} ${p.brand} ${p.category} ${p.subcategory} ${p.description} ${p.tags.join(' ')} ${JSON.stringify(p.specs)}`.toLowerCase();
@@ -303,10 +329,10 @@ export class DatabaseProductProvider implements IProductProvider {
     });
 
     return scored
-      .filter(item => item.score > 0)
-      .sort((a, b) => b.score - a.score)
+      .filter((item: { product: Product; score: number }) => item.score > 0)
+      .sort((a: { score: number }, b: { score: number }) => b.score - a.score)
       .slice(0, maxResults)
-      .map(item => item.product);
+      .map((item: { product: Product }) => item.product);
   }
 
   public async compareProducts(productIds: string[]): Promise<ComparisonMatrix> {
@@ -317,23 +343,23 @@ export class DatabaseProductProvider implements IProductProvider {
       },
     });
 
-    const products = rows.map(mapPrismaProduct);
+    const products: Product[] = rows.map(mapPrismaProduct);
     if (products.length === 0) {
       return { products: [], categories: [], attributes: [] };
     }
 
-    const categories = Array.from(new Set(products.map(p => p.category)));
+    const categories: string[] = Array.from(new Set(products.map((p: Product) => p.category)));
 
     // Determine lowest price and highest rating
-    const lowestPrice = Math.min(...products.map(p => p.priceUSD));
-    const highestRating = Math.max(...products.map(p => p.rating));
+    const lowestPrice = Math.min(...products.map((p: Product) => p.priceUSD));
+    const highestRating = Math.max(...products.map((p: Product) => p.rating));
 
     // Standard Comparison Attributes with Highlighted Best Values
     const attributes: ComparisonMatrix['attributes'] = [
       {
         key: 'price',
         label: 'Price (USD)',
-        values: products.map(p => ({
+        values: products.map((p: Product) => ({
           productId: p.id,
           value: `$${p.priceUSD.toFixed(2)}`,
           isBest: p.priceUSD === lowestPrice,
@@ -342,7 +368,7 @@ export class DatabaseProductProvider implements IProductProvider {
       {
         key: 'rating',
         label: 'Customer Rating',
-        values: products.map(p => ({
+        values: products.map((p: Product) => ({
           productId: p.id,
           value: `${p.rating} / 5.0 (${p.reviewCount} reviews)`,
           isBest: p.rating === highestRating,
@@ -351,17 +377,17 @@ export class DatabaseProductProvider implements IProductProvider {
       {
         key: 'brand',
         label: 'Brand',
-        values: products.map(p => ({ productId: p.id, value: p.brand })),
+        values: products.map((p: Product) => ({ productId: p.id, value: p.brand })),
       },
       {
         key: 'category',
         label: 'Category & Subcategory',
-        values: products.map(p => ({ productId: p.id, value: `${p.category} → ${p.subcategory}` })),
+        values: products.map((p: Product) => ({ productId: p.id, value: `${p.category} → ${p.subcategory}` })),
       },
       {
         key: 'stock',
         label: 'Availability',
-        values: products.map(p => ({
+        values: products.map((p: Product) => ({
           productId: p.id,
           value: p.stock > 0 ? `${p.stock} in stock` : 'Out of stock',
           isBest: p.stock > 20,
@@ -371,7 +397,7 @@ export class DatabaseProductProvider implements IProductProvider {
 
     // Collect all unique specification keys across comparing products
     const specKeys = new Set<string>();
-    products.forEach(p => {
+    products.forEach((p: Product) => {
       Object.keys(p.specs || {}).forEach(k => specKeys.add(k));
     });
 
@@ -379,7 +405,7 @@ export class DatabaseProductProvider implements IProductProvider {
       attributes.push({
         key,
         label: key,
-        values: products.map(p => ({
+        values: products.map((p: Product) => ({
           productId: p.id,
           value: p.specs?.[key] !== undefined ? String(p.specs[key]) : '—',
         })),

@@ -15,6 +15,7 @@ import budgetRoutes from './routes/budget.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
 
 export const app = express();
+app.set('trust proxy', 1);
 
 // Security middleware
 app.use(helmet());
