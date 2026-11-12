@@ -1,0 +1,204 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #F8FAFC;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    .s2-wrap {
+      position: absolute;
+      inset: 0;
+      padding: 76px 104px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .s2-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .s2-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .s2-shield {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: #047857;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .s2-logo-text {
+      font-size: 28px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .s2-logo-text span {
+      color: #047857;
+    }
+    .s2-chap {
+      font-size: 18px;
+      font-weight: 700;
+      color: #475569;
+      letter-spacing: 0.06em;
+    }
+    .s2-hero {
+      text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .s2-kicker {
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      color: #065F46;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 18px;
+    }
+    .s2-hero h1 {
+      font-size: 64px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .s2-hero h1 span {
+      color: #047857;
+    }
+    .s2-hero p {
+      margin-top: 16px;
+      font-size: 24px;
+      color: #334155;
+      line-height: 1.45;
+    }
+    .s2-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .s2-pillar {
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 18px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+    }
+    .s2-step {
+      display: inline-block;
+      align-self: flex-start;
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: #ECFDF5;
+      color: #065F46;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .s2-pillar h3 {
+      font-size: 25px;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.25;
+    }
+    .s2-pillar p {
+      font-size: 19px;
+      line-height: 1.5;
+      color: #334155;
+    }
+    .s2-footer-bar {
+      background: #0F172A;
+      color: #F8FAFC;
+      border-radius: 16px;
+      padding: 22px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .s2-footer-bar span.hl {
+      color: #34D399;
+      font-weight: 700;
+    }
+  </style>
+
+  <div id="root" data-composition-id="scene-2" data-width="1920" data-height="1080">
+    <div class="clip" data-start="0" data-duration="24.5">
+      <div class="s2-wrap">
+        <div class="s2-top">
+          <div class="s2-brand-row">
+            <div class="s2-shield">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div class="s2-logo-text">Pay<span>Pilot</span></div>
+          </div>
+          <div class="s2-chap">02 / FOUR-PILLAR ARCHITECTURE</div>
+        </div>
+
+        <div id="s2-hero" class="s2-hero">
+          <div class="s2-kicker">Autonomous Financial Flow</div>
+          <h1>Your shopping, <span>on autopilot.</span></h1>
+          <p>PayPilot separates artificial intelligence from financial authority across four strict layers.</p>
+        </div>
+
+        <div class="s2-grid">
+          <div id="s2-c1" class="s2-pillar">
+            <span class="s2-step">PILLAR 01</span>
+            <h3>AI Handles Shopping Intelligence</h3>
+            <p>Google Gemini 2.5 Flash extracts intent, specs, and budget constraints from plain English.</p>
+          </div>
+          <div id="s2-c2" class="s2-pillar">
+            <span class="s2-step">PILLAR 02</span>
+            <h3>Backend Enforces Financial Rules</h3>
+            <p>Express middleware recalculates DB price snapshots and enforces hard monthly spending ceilings.</p>
+          </div>
+          <div id="s2-c3" class="s2-pillar">
+            <span class="s2-step">PILLAR 03</span>
+            <h3>User Controls Authorization</h3>
+            <p>You inspect every item, verify remaining runway, and explicitly approve checkout.</p>
+          </div>
+          <div id="s2-c4" class="s2-pillar">
+            <span class="s2-step">PILLAR 04</span>
+            <h3>PayPal Settles the Transaction</h3>
+            <p>Server-to-server OAuth 2.0 order creation, capture verification, and duplicate prevention.</p>
+          </div>
+        </div>
+
+        <div id="s2-bar" class="s2-footer-bar">
+          <span>Security Boundary: <span class="hl">AI cannot capture payments or override budget ceilings.</span></span>
+          <span>Orders API v2 • CAPTURE Intent</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#s2-hero", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.65, ease: "power4.out" }, 0.3)
+      .fromTo("#s2-c1", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 4.0)
+      .fromTo("#s2-c2", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 8.5)
+      .fromTo("#s2-c3", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 13.0)
+      .fromTo("#s2-c4", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 16.5)
+      .fromTo("#s2-bar", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 18.5)
+      .fromTo(".s2-wrap", { opacity: 1 }, { opacity: 0, duration: 0.45, ease: "power2.in" }, 23.95);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["scene-2"] = tl;
+  </script>
+</template>

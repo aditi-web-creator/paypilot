@@ -1,0 +1,1 @@
+Introducing PayPilot: an autonomous AI shopping copilot built with Google Gemini 2.5 Flash, Express, and PayPal Orders API v2. State what you need in plain English or voice, compare verified catalog specs, and enforce hard server-side budget guardrails before every sandbox checkout. Your AI. Your Budget. Your Purchase.

@@ -1,0 +1,239 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #0F172A;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    .s6-wrap {
+      position: absolute;
+      inset: 0;
+      padding: 58px 86px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .s6-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .s6-head h1 {
+      font-size: 38px;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+    .s6-chap {
+      font-size: 17px;
+      font-weight: 700;
+      color: #94A3B8;
+      letter-spacing: 0.06em;
+    }
+    .s6-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 46% 54%;
+      gap: 32px;
+      align-items: stretch;
+    }
+    .s6-pipeline {
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 34px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .s6-pipe-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 18px;
+    }
+    .s6-step {
+      padding: 18px 20px;
+      border-radius: 14px;
+      background: #0F172A;
+      border: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .s6-ep {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      color: #34D399;
+    }
+    .s6-desc {
+      font-size: 17px;
+      color: #CBD5E1;
+      line-height: 1.4;
+    }
+    .s6-receipt {
+      background: #FFFFFF;
+      border-radius: 22px;
+      padding: 38px 42px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 3px solid #10B981;
+    }
+    .s6-paypal-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .s6-pp-btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      background: #0070BA;
+      color: #FFFFFF;
+      font-size: 19px;
+      font-weight: 800;
+    }
+    .s6-status-pill {
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      color: #065F46;
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .s6-confirmed {
+      margin-top: 20px;
+    }
+    .s6-conf-kicker {
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #047857;
+    }
+    .s6-conf-title {
+      font-size: 36px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-top: 6px;
+    }
+    .s6-ids {
+      margin-top: 20px;
+      padding: 22px;
+      border-radius: 14px;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .s6-id-lbl {
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .s6-id-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .s6-summary-line {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid #E2E8F0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 22px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+  </style>
+
+  <div id="root" data-composition-id="scene-6" data-width="1920" data-height="1080">
+    <div class="clip" data-start="0" data-duration="24">
+      <div class="s6-wrap">
+        <div class="s6-head">
+          <h1>Official PayPal Orders API v2 Settlement</h1>
+          <div class="s6-chap">06 / VERIFIED PAYPAL CHECKOUT</div>
+        </div>
+
+        <div class="s6-grid">
+          <div class="s6-pipeline">
+            <div class="s6-pipe-title">Zero Client Secrets on Frontend</div>
+            <div id="s6-s1" class="s6-step">
+              <div class="s6-ep">1. POST /api/payments/paypal/create-order</div>
+              <div class="s6-desc">Server obtains OAuth 2.0 token via HTTP Basic Auth and recalculates cart totals from DB snapshots.</div>
+            </div>
+            <div id="s6-s2" class="s6-step">
+              <div class="s6-ep">2. PayPal JS SDK User Authorization</div>
+              <div class="s6-desc">User reviews the exact USD total and explicitly approves payment inside PayPal Sandbox.</div>
+            </div>
+            <div id="s6-s3" class="s6-step">
+              <div class="s6-ep">3. POST /api/payments/paypal/capture-order</div>
+              <div class="s6-desc">Backend verifies 200/201 capture status, prevents duplicate captures, and settles order.</div>
+            </div>
+          </div>
+
+          <div id="s6-receipt" class="s6-receipt">
+            <div>
+              <div class="s6-paypal-bar">
+                <div class="s6-pp-btn">PayPal Orders API v2</div>
+                <div class="s6-status-pill">Sandbox Verified</div>
+              </div>
+
+              <div id="s6-conf" class="s6-confirmed">
+                <div class="s6-conf-kicker">Payment Verified &amp; Captured</div>
+                <div class="s6-conf-title">Order Confirmed #PP-8492A1</div>
+
+                <div class="s6-ids">
+                  <div>
+                    <span class="s6-id-lbl">PayPal Order Identifier</span>
+                    <span class="s6-id-val">5O190127TN364715T</span>
+                  </div>
+                  <div>
+                    <span class="s6-id-lbl">Server Capture Reference</span>
+                    <span class="s6-id-val" style="color:#065F46;">2GG279541U471931P</span>
+                  </div>
+                  <div>
+                    <span class="s6-id-lbl">Purchased Item</span>
+                    <span class="s6-id-val" style="font-family:Inter,sans-serif;">Sony Pro Max 2026</span>
+                  </div>
+                  <div>
+                    <span class="s6-id-lbl">Duplicate Capture Guard</span>
+                    <span class="s6-id-val" style="color:#065F46;">Idempotent Active</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="s6-summary-line">
+              <span>Total Settled Amount (USD)</span>
+              <span style="color:#047857; font-size: 32px;">$140.39</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#s6-s1", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.55 }, 0.6)
+      .fromTo("#s6-s2", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.55 }, 6.0)
+      .fromTo("#s6-s3", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.55 }, 11.5)
+      .fromTo("#s6-receipt", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 4.0)
+      .fromTo("#s6-conf", { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.6, ease: "expo.out" }, 13.5)
+      .fromTo(".s6-wrap", { opacity: 1 }, { opacity: 0, duration: 0.45, ease: "power2.in" }, 23.45);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["scene-6"] = tl;
+  </script>
+</template>

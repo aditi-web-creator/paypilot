@@ -1,0 +1,203 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #0F172A;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    .s1-wrap {
+      position: absolute;
+      inset: 0;
+      padding: 84px 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .s1-bg-glow {
+      position: absolute;
+      width: 900px;
+      height: 900px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(4, 120, 87, 0.28) 0%, rgba(15, 23, 42, 0) 70%);
+      top: -220px;
+      right: -120px;
+      pointer-events: none;
+    }
+    .s1-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .s1-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: rgba(6, 78, 59, 0.7);
+      border: 1px solid rgba(52, 211, 153, 0.35);
+      color: #A7F3D0;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .s1-chapter {
+      color: #94A3B8;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+    .s1-center {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+    .s1-headline {
+      font-size: 74px;
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: #FFFFFF;
+      max-width: 1400px;
+    }
+    .s1-headline .accent {
+      color: #34D399;
+    }
+    .s1-problems {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 1520px;
+    }
+    .s1-card {
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .s1-card-tag {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #FBBF24;
+    }
+    .s1-card h2 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #FFFFFF;
+      line-height: 1.25;
+    }
+    .s1-card p {
+      font-size: 22px;
+      line-height: 1.5;
+      color: #CBD5E1;
+    }
+    .s1-reveal {
+      background: linear-gradient(135deg, #064E3B 0%, #047857 100%);
+      border: 1px solid rgba(110, 231, 183, 0.45);
+      border-radius: 24px;
+      padding: 36px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1520px;
+    }
+    .s1-brand {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .s1-logo-box {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #047857;
+    }
+    .s1-brand-name {
+      font-size: 48px;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.02em;
+    }
+    .s1-tagline {
+      font-size: 30px;
+      font-weight: 700;
+      color: #ECFDF5;
+    }
+  </style>
+
+  <div id="root" data-composition-id="scene-1" data-width="1920" data-height="1080">
+    <div class="clip" data-start="0" data-duration="22.5">
+      <div class="s1-bg-glow"></div>
+      <div class="s1-wrap">
+        <div class="s1-top">
+          <div id="s1-pill" class="s1-pill">PayPal AI Hackathon Submission</div>
+          <div id="s1-chap" class="s1-chapter">01 / THE PROBLEM</div>
+        </div>
+
+        <div class="s1-center">
+          <h1 id="s1-title" class="s1-headline">
+            Online shopping wasn&apos;t built for <span class="accent">real budgets.</span>
+          </h1>
+
+          <div class="s1-problems">
+            <div id="s1-p1" class="s1-card">
+              <span class="s1-card-tag">Friction 01</span>
+              <h2>Decision Fatigue &amp; Spec Overload</h2>
+              <p>Hours comparing technical specs across dozens of tabs, unsure which product actually fits your requirements.</p>
+            </div>
+
+            <div id="s1-p2" class="s1-card">
+              <span class="s1-card-tag">Friction 02</span>
+              <h2>Impulse Overspending &amp; No Guardrails</h2>
+              <p>Traditional chatbots generate chat text with zero catalog truth, zero server math, and zero payment controls.</p>
+            </div>
+          </div>
+
+          <div id="s1-reveal" class="s1-reveal">
+            <div class="s1-brand">
+              <div class="s1-logo-box">
+                <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="m9 12 2 2 4-4"/>
+                </svg>
+              </div>
+              <div>
+                <div class="s1-brand-name">PayPilot</div>
+                <div style="font-size: 20px; color: #D1FAE5; font-weight: 500;">Autonomous AI Shopping Copilot</div>
+              </div>
+            </div>
+            <div class="s1-tagline">Your AI. Your Budget. Your Purchase.</div>
+          </div>
+        </div>
+
+        <div style="height: 12px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#s1-pill", { opacity: 0, y: -16 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.2)
+      .fromTo("#s1-chap", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 0.3)
+      .fromTo("#s1-title", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.7, ease: "power4.out" }, 0.6)
+      .fromTo("#s1-p1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 3.2)
+      .fromTo("#s1-p2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 7.0)
+      .fromTo("#s1-reveal", { opacity: 0, y: 32, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.75, ease: "expo.out" }, 13.4)
+      .fromTo(".s1-wrap", { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.in" }, 21.9);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["scene-1"] = tl;
+  </script>
+</template>

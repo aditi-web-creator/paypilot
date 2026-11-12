@@ -1,0 +1,1 @@
+When your cart fits your budget, PayPilot creates a server-side PayPal order using OAuth 2.0, keeping every client secret strictly off the frontend. You review the exact USD total and authorize via PayPal Sandbox. Once captured, the backend verifies the response, prevents duplicate captures, and issues a confirmed receipt.

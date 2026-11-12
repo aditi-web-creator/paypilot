@@ -1,0 +1,217 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #F8FAFC;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    .s7-wrap {
+      position: absolute;
+      inset: 0;
+      padding: 52px 84px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+    .s7-banner {
+      background: linear-gradient(135deg, #065F46 0%, #022C22 100%);
+      border-radius: 20px;
+      padding: 28px 36px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .s7-banner h1 {
+      font-size: 32px;
+      font-weight: 800;
+    }
+    .s7-banner p {
+      font-size: 17px;
+      color: #D1FAE5;
+      margin-top: 4px;
+    }
+    .s7-chap {
+      font-size: 16px;
+      font-weight: 700;
+      color: #A7F3D0;
+      letter-spacing: 0.06em;
+    }
+    .s7-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .s7-kpi {
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 16px;
+      padding: 24px 26px;
+    }
+    .s7-kpi-lbl {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #475569;
+    }
+    .s7-kpi-val {
+      font-size: 36px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-top: 8px;
+    }
+    .s7-kpi-sub {
+      font-size: 15px;
+      font-weight: 600;
+      color: #065F46;
+      margin-top: 6px;
+    }
+    .s7-bottom {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 54% 46%;
+      gap: 24px;
+    }
+    .s7-panel {
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 18px;
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .s7-panel-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 16px;
+    }
+    .s7-order-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid #E2E8F0;
+      font-size: 17px;
+      color: #0F172A;
+    }
+    .s7-order-row:last-child {
+      border-bottom: none;
+    }
+    .s7-badge-done {
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: #ECFDF5;
+      color: #065F46;
+      font-size: 14px;
+      font-weight: 800;
+      border: 1px solid #A7F3D0;
+    }
+  </style>
+
+  <div id="root" data-composition-id="scene-7" data-width="1920" data-height="1080">
+    <div class="clip" data-start="0" data-duration="16">
+      <div class="s7-wrap">
+        <div id="s7-banner" class="s7-banner">
+          <div>
+            <h1>PayPilot Fintech Dashboard &amp; Order History</h1>
+            <p>Persisted expenditure metrics, category breakdowns, and verified PayPal capture receipts.</p>
+          </div>
+          <div class="s7-chap">07 / ANALYTICS &amp; RECEIPTS</div>
+        </div>
+
+        <div id="s7-kpis" class="s7-kpis">
+          <div class="s7-kpi">
+            <div class="s7-kpi-lbl">Monthly Budget</div>
+            <div class="s7-kpi-val">$500.00</div>
+            <div class="s7-kpi-sub">Strict Enforcement Active</div>
+          </div>
+          <div class="s7-kpi">
+            <div class="s7-kpi-lbl">Total Spending</div>
+            <div class="s7-kpi-val">$140.39</div>
+            <div class="s7-kpi-sub">28% of authorized cap</div>
+          </div>
+          <div class="s7-kpi">
+            <div class="s7-kpi-lbl">Remaining Runway</div>
+            <div class="s7-kpi-val" style="color:#047857;">$359.61</div>
+            <div class="s7-kpi-sub">Safe spending balance</div>
+          </div>
+          <div class="s7-kpi">
+            <div class="s7-kpi-lbl">Verified Captures</div>
+            <div class="s7-kpi-val">1 Order</div>
+            <div class="s7-kpi-sub">PayPal Sandbox Settled</div>
+          </div>
+        </div>
+
+        <div class="s7-bottom">
+          <div id="s7-chart" class="s7-panel">
+            <div class="s7-panel-title">Spending Trend &amp; Category Breakdown (Recharts)</div>
+            <svg viewBox="0 0 760 260" width="100%" height="260" aria-label="Spending Trend Area Chart">
+              <defs>
+                <linearGradient id="emeraldFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#047857" stop-opacity="0.32" />
+                  <stop offset="100%" stop-color="#047857" stop-opacity="0.02" />
+                </linearGradient>
+              </defs>
+              <line x1="40" y1="220" x2="730" y2="220" stroke="#CBD5E1" stroke-width="2" />
+              <line x1="40" y1="150" x2="730" y2="150" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="6 6" />
+              <line x1="40" y1="80" x2="730" y2="80" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="6 6" />
+              <path d="M 40 220 L 210 210 L 390 180 L 560 135 L 720 68 L 720 220 Z" fill="url(#emeraldFill)" />
+              <path d="M 40 220 L 210 210 L 390 180 L 560 135 L 720 68" fill="none" stroke="#047857" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="720" cy="68" r="8" fill="#047857" stroke="#FFFFFF" stroke-width="3" />
+              <text x="40" y="248" fill="#475569" font-size="16" font-weight="600">Week 1</text>
+              <text x="240" y="248" fill="#475569" font-size="16" font-weight="600">Week 2</text>
+              <text x="460" y="248" fill="#475569" font-size="16" font-weight="600">Week 3</text>
+              <text x="665" y="248" fill="#065F46" font-size="16" font-weight="700">Today ($140.39)</text>
+            </svg>
+          </div>
+
+          <div id="s7-orders" class="s7-panel">
+            <div class="s7-panel-title">Transaction &amp; Order History</div>
+            <div>
+              <div class="s7-order-row">
+                <div>
+                  <strong style="font-family:JetBrains Mono,monospace;">#PP-8492A1</strong>
+                  <span style="color:#475569; margin-left:10px;">Sony Pro Max 2026 Headphone</span>
+                </div>
+                <span class="s7-badge-done">completed</span>
+                <strong>$140.39</strong>
+              </div>
+              <div class="s7-order-row">
+                <div>
+                  <strong style="font-family:JetBrains Mono,monospace;">PayPal Order</strong>
+                  <span style="color:#475569; margin-left:10px;">5O190127TN364715T</span>
+                </div>
+                <span class="s7-badge-done">captured</span>
+                <strong style="color:#065F46;">Verified</strong>
+              </div>
+              <div class="s7-order-row">
+                <div>
+                  <strong style="font-family:JetBrains Mono,monospace;">Database Sync</strong>
+                  <span style="color:#475569; margin-left:10px;">PostgreSQL / Local Store</span>
+                </div>
+                <span class="s7-badge-done">persisted</span>
+                <strong>Receipt Ready</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#s7-banner", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.55 }, 0.2)
+      .fromTo("#s7-kpis", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.55 }, 2.2)
+      .fromTo("#s7-chart", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.55 }, 5.0)
+      .fromTo("#s7-orders", { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.55 }, 8.0)
+      .fromTo(".s7-wrap", { opacity: 1 }, { opacity: 0, duration: 0.45, ease: "power2.in" }, 15.45);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["scene-7"] = tl;
+  </script>
+</template>

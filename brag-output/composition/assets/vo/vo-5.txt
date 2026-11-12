@@ -1,0 +1,1 @@
+Here is where PayPilot protects your wallet. In your cart, the Express server recalculates every item snapshot, free shipping, and 8 percent tax. Try checking out a 1,200 dollar flagship phone against a 500 dollar monthly limit, and the backend blocks checkout with a 422 error. The AI can never force a payment past your cap.

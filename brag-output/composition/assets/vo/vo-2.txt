@@ -1,0 +1,1 @@
+PayPilot separates artificial intelligence from financial authority. Google Gemini 2.5 Flash handles natural-language understanding and catalog matching. Your Express backend enforces hard mathematical totals and monthly spending ceilings. And only you authorize the final payment through PayPal Orders API v2.

@@ -1,0 +1,135 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #0F172A;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    .s8-wrap {
+      position: absolute;
+      inset: 0;
+      padding: 72px 104px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+    }
+    .s8-stack {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      width: 100%;
+      max-width: 1520px;
+    }
+    .s8-chip {
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 24px 28px;
+      text-align: left;
+    }
+    .s8-chip-k {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #6EE7B7;
+    }
+    .s8-chip-v {
+      font-size: 24px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-top: 6px;
+    }
+    .s8-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+    }
+    .s8-logo-ring {
+      width: 104px;
+      height: 104px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      box-shadow: 0 20px 50px rgba(4, 120, 87, 0.45);
+    }
+    .s8-brand {
+      font-size: 84px;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .s8-brand span {
+      color: #34D399;
+    }
+    .s8-tag {
+      font-size: 36px;
+      font-weight: 700;
+      color: #ECFDF5;
+      letter-spacing: -0.01em;
+    }
+    .s8-tests {
+      padding: 12px 26px;
+      border-radius: 999px;
+      background: rgba(6, 78, 59, 0.85);
+      border: 1px solid rgba(52, 211, 153, 0.45);
+      color: #A7F3D0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+  </style>
+
+  <div id="root" data-composition-id="scene-8" data-width="1920" data-height="1080">
+    <div class="clip" data-start="0" data-duration="17.5">
+      <div class="s8-wrap">
+        <div id="s8-stack" class="s8-stack">
+          <div class="s8-chip">
+            <div class="s8-chip-k">Frontend</div>
+            <div class="s8-chip-v">React 18 • TypeScript • Tailwind</div>
+          </div>
+          <div class="s8-chip">
+            <div class="s8-chip-k">AI &amp; Backend</div>
+            <div class="s8-chip-v">Gemini 2.5 Flash • Express • Zod</div>
+          </div>
+          <div class="s8-chip">
+            <div class="s8-chip-k">Payments &amp; Data</div>
+            <div class="s8-chip-v">PayPal Orders v2 • PostgreSQL</div>
+          </div>
+        </div>
+
+        <div id="s8-hero" class="s8-hero">
+          <div class="s8-logo-ring">
+            <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="s8-brand">Pay<span>Pilot</span></div>
+          <div class="s8-tag">Your AI. Your Budget. Your Purchase.</div>
+        </div>
+
+        <div id="s8-tests" class="s8-tests">
+          17 / 17 Automated Tests Passed • Zero-Config Local Simulation Ready
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#s8-stack", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.3)
+      .fromTo("#s8-tests", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.55 }, 4.5)
+      .fromTo("#s8-hero", { opacity: 0, scale: 0.94, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: "expo.out" }, 8.0);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["scene-8"] = tl;
+  </script>
+</template>

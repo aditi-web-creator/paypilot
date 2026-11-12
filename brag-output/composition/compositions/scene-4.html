@@ -1,0 +1,231 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #F8FAFC;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    .s4-wrap {
+      position: absolute;
+      inset: 0;
+      padding: 56px 84px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .s4-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .s4-head h1 {
+      font-size: 36px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .s4-chap {
+      font-size: 17px;
+      font-weight: 700;
+      color: #475569;
+      letter-spacing: 0.06em;
+    }
+    .s4-filters {
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 16px;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .s4-cats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .s4-cat {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #F1F5F9;
+      color: #1E293B;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .s4-cat.active {
+      background: #047857;
+      color: #FFFFFF;
+      font-weight: 700;
+    }
+    .s4-currencies {
+      display: flex;
+      gap: 8px;
+    }
+    .s4-cur {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid #CBD5E1;
+      font-size: 15px;
+      font-weight: 700;
+      color: #0F172A;
+      background: #FFFFFF;
+    }
+    .s4-cur.active {
+      background: #ECFDF5;
+      border-color: #047857;
+      color: #065F46;
+    }
+    .s4-matrix {
+      flex: 1;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: 20px;
+      padding: 32px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+    }
+    .s4-matrix-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #E2E8F0;
+      padding-bottom: 18px;
+    }
+    .s4-matrix-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .s4-truth-pill {
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      color: #065F46;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .s4-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+    .s4-table th,
+    .s4-table td {
+      padding: 20px 18px;
+      text-align: left;
+      border-bottom: 1px solid #E2E8F0;
+      font-size: 20px;
+    }
+    .s4-table th {
+      color: #475569;
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .s4-table td.label {
+      font-weight: 700;
+      color: #334155;
+      width: 240px;
+    }
+    .s4-best {
+      color: #065F46;
+      font-weight: 800;
+      background: #ECFDF5;
+      border-radius: 8px;
+      padding: 6px 12px;
+      display: inline-block;
+    }
+  </style>
+
+  <div id="root" data-composition-id="scene-4" data-width="1920" data-height="1080">
+    <div class="clip" data-start="0" data-duration="23">
+      <div class="s4-wrap">
+        <div class="s4-head">
+          <h1>Multi-Facet Catalog &amp; Side-by-Side Comparison</h1>
+          <div class="s4-chap">04 / CATALOG EXPLORER</div>
+        </div>
+
+        <div id="s4-filters" class="s4-filters">
+          <div class="s4-cats">
+            <span class="s4-cat active">Headphones</span>
+            <span class="s4-cat">Laptops</span>
+            <span class="s4-cat">Smartphones</span>
+            <span class="s4-cat">Keyboards</span>
+            <span class="s4-cat">Smartwatches</span>
+            <span class="s4-cat">Monitors</span>
+            <span class="s4-cat">Cameras</span>
+          </div>
+          <div class="s4-currencies">
+            <span class="s4-cur active">USD $</span>
+            <span class="s4-cur">INR ₹</span>
+            <span class="s4-cur">EUR €</span>
+            <span class="s4-cur">GBP £</span>
+          </div>
+        </div>
+
+        <div id="s4-matrix" class="s4-matrix">
+          <div class="s4-matrix-head">
+            <div class="s4-matrix-title">Side-by-Side Comparison Matrix (Up to 4 Products)</div>
+            <div class="s4-truth-pill">Strict Catalog Truth • Zero Invented Specs</div>
+          </div>
+
+          <table class="s4-table">
+            <thead>
+              <tr>
+                <th>Specification</th>
+                <th>Sony Pro Max 2026</th>
+                <th>AeroSound Studio ANC</th>
+                <th>SoundPulse Lite</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="s4-r1">
+                <td class="label">Verified Price</td>
+                <td><span class="s4-best">$129.99</span></td>
+                <td>$148.00</td>
+                <td>$89.00</td>
+              </tr>
+              <tr id="s4-r2">
+                <td class="label">Battery Endurance</td>
+                <td><span class="s4-best">36 hrs ANC On</span></td>
+                <td>30 hrs ANC On</td>
+                <td>24 hrs Standard</td>
+              </tr>
+              <tr id="s4-r3">
+                <td class="label">Noise Cancellation</td>
+                <td>Adaptive Dual-Mic ANC</td>
+                <td>Hybrid Studio ANC</td>
+                <td>Passive Isolation</td>
+              </tr>
+              <tr id="s4-r4">
+                <td class="label">Warranty &amp; Match</td>
+                <td><span class="s4-best">2-Year • 98% Match</span></td>
+                <td>1-Year • 91% Match</td>
+                <td>1-Year • 78% Match</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#s4-filters", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 0.3)
+      .fromTo("#s4-matrix", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 5.0)
+      .fromTo("#s4-r1", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.45 }, 8.5)
+      .fromTo("#s4-r2", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.45 }, 10.5)
+      .fromTo("#s4-r3", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.45 }, 12.5)
+      .fromTo("#s4-r4", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.45 }, 14.5)
+      .fromTo(".s4-wrap", { opacity: 1 }, { opacity: 0, duration: 0.45, ease: "power2.in" }, 22.45);
+    window.__timelines = window.__timelines || {};
+    window.__timelines["scene-4"] = tl;
+  </script>
+</template>

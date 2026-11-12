@@ -1,0 +1,1 @@
+Built with React, TypeScript, Express, Gemini 2.5 Flash, and PayPal Orders v2, backed by 17 passing automated tests and zero-config local simulation. PayPilot. Your AI. Your Budget. Your Purchase.

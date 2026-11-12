@@ -1,0 +1,2269 @@
+{
+  "ok": true,
+  "strict": false,
+  "browserSkipped": false,
+  "lint": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 8,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<div data-start=\"0\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\projects\\PayPilot\\brag-output\\composition\\compositions\\scene-1.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<div data-start=\"0\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\projects\\PayPilot\\brag-output\\composition\\compositions\\scene-2.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<div data-start=\"0\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\projects\\PayPilot\\brag-output\\composition\\compositions\\scene-3.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<div data-start=\"0\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\projects\\PayPilot\\brag-output\\composition\\compositions\\scene-4.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<div data-start=\"0\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\projects\\PayPilot\\brag-output\\composition\\compositions\\scene-5.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<div data-start=\"0\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\projects\\PayPilot\\brag-output\\composition\\compositions\\scene-6.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<div data-start=\"0\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\projects\\PayPilot\\brag-output\\composition\\compositions\\scene-7.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<div data-start=\"0\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\projects\\PayPilot\\brag-output\\composition\\compositions\\scene-8.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      }
+    ],
+    "filesScanned": 9
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 7,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-hook\" is 0.19s but its slot (data-duration) is 1.50s — the slot is shortened to the media length when rendered. Set data-duration to ~0.19s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "180",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-fps": "30"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-arch\" is 0.11s but its slot (data-duration) is 1.20s — the slot is shortened to the media length when rendered. Set data-duration to ~0.11s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "180",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-fps": "30"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-copilot\" is 0.11s but its slot (data-duration) is 1.20s — the slot is shortened to the media length when rendered. Set data-duration to ~0.11s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "180",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-fps": "30"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-match\" is 0.01s but its slot (data-duration) is 1.50s — the slot is shortened to the media length when rendered. Set data-duration to ~0.01s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "180",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-fps": "30"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-block\" is 0.13s but its slot (data-duration) is 1.50s — the slot is shortened to the media length when rendered. Set data-duration to ~0.13s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "180",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-fps": "30"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-capture\" is 1.48s but its slot (data-duration) is 2.00s — the slot is shortened to the media length when rendered. Set data-duration to ~1.48s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "180",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-fps": "30"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-outro\" is 1.48s but its slot (data-duration) is 2.50s — the slot is shortened to the media length when rendered. Set data-duration to ~1.48s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "180",
+          "data-width": "1920",
+          "data-height": "1080",
+          "data-fps": "30"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      }
+    ]
+  },
+  "layout": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "duration": 180,
+    "samples": [
+      10,
+      30,
+      50,
+      70,
+      90,
+      110,
+      130,
+      150,
+      170
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 0,
+    "truncated": false
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": false,
+    "samples": 0
+  },
+  "contrast": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": true,
+    "samples": [
+      10,
+      50,
+      90,
+      130,
+      170
+    ],
+    "checked": 75,
+    "passed": 75
+  },
+  "craft": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 29,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "first_frame_empty",
+        "severity": "warning",
+        "message": "Frame 0 shows only the background, and the first frame is the thumbnail on social players: have the title or key image already on screen at 0 s instead of entering from nothing; see references/review.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 7 text elements stay under it for 0.5 s or more, the smallest \"Friction 01\" at 15 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "Friction 01",
+        "selector": "#s1-p1 > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/scene-1.html",
+        "bbox": {
+          "x": 151,
+          "y": 494.87,
+          "width": 104.52,
+          "height": 19
+        },
+        "time": 3.306,
+        "times": [
+          0.301,
+          0.601,
+          3.306,
+          3.306,
+          7.212,
+          7.212,
+          13.523
+        ],
+        "fontPx": 15,
+        "floorPx": 28,
+        "seconds": 19.232,
+        "elements": [
+          {
+            "selector": "#s1-p1 > span:nth-of-type(1)",
+            "text": "Friction 01",
+            "fontPx": 15,
+            "time": 3.306,
+            "seconds": 19.232
+          },
+          {
+            "selector": "#s1-p2 > span:nth-of-type(1)",
+            "text": "Friction 02",
+            "fontPx": 15,
+            "time": 7.212,
+            "seconds": 15.326
+          },
+          {
+            "selector": "#s1-pill",
+            "text": "PayPal AI Hackathon Submission",
+            "fontPx": 18,
+            "time": 0.301,
+            "seconds": 22.237
+          },
+          {
+            "selector": "#s1-chap",
+            "text": "01 / THE PROBLEM",
+            "fontPx": 18,
+            "time": 0.601,
+            "seconds": 21.937
+          },
+          {
+            "selector": "div.s1-brand > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Autonomous AI Shopping Copilot",
+            "fontPx": 19.76,
+            "time": 13.523,
+            "seconds": 9.015
+          },
+          {
+            "selector": "#s1-p1 > p:nth-of-type(1)",
+            "text": "Hours comparing technical specs across dozens of tabs, unsure which product actually fits your requirements.",
+            "fontPx": 22,
+            "time": 3.306,
+            "seconds": 19.232
+          },
+          {
+            "selector": "#s1-p2 > p:nth-of-type(1)",
+            "text": "Traditional chatbots generate chat text with zero catalog truth, zero server math, and zero payment controls.",
+            "fontPx": 22,
+            "time": 7.212,
+            "seconds": 15.326
+          }
+        ]
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 3.00 s (3.91–6.91 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 3.907,
+        "seconds": 3.005,
+        "floorSeconds": 3,
+        "until": 6.912
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 5.41 s (7.81–13.22 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 7.813,
+        "seconds": 5.409,
+        "floorSeconds": 3,
+        "until": 13.222
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 7.21 s (14.42–21.64 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 14.424,
+        "seconds": 7.212,
+        "floorSeconds": 3,
+        "until": 21.636
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 3.00 s (23.44–26.44 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 23.439,
+        "seconds": 3.005,
+        "floorSeconds": 3,
+        "until": 26.444
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 18 text elements stay under it for 0.5 s or more, the smallest \"PILLAR 01\" at 15 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "PILLAR 01",
+        "selector": "#s2-c1 > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/scene-2.html",
+        "bbox": {
+          "x": 147,
+          "y": 583.14,
+          "width": 78.19,
+          "height": 19
+        },
+        "time": 26.745,
+        "times": [
+          22.538,
+          23.139,
+          23.139,
+          26.745,
+          26.745,
+          26.745,
+          31.252,
+          31.252,
+          31.252,
+          35.76,
+          35.76,
+          35.76,
+          39.366,
+          39.366,
+          39.366,
+          41.169,
+          41.169,
+          41.169
+        ],
+        "fontPx": 15,
+        "floorPx": 28,
+        "seconds": 20.134,
+        "elements": [
+          {
+            "selector": "#s2-c1 > span:nth-of-type(1)",
+            "text": "PILLAR 01",
+            "fontPx": 15,
+            "time": 26.745,
+            "seconds": 20.134
+          },
+          {
+            "selector": "#s2-c2 > span:nth-of-type(1)",
+            "text": "PILLAR 02",
+            "fontPx": 15,
+            "time": 31.252,
+            "seconds": 15.627
+          },
+          {
+            "selector": "#s2-c3 > span:nth-of-type(1)",
+            "text": "PILLAR 03",
+            "fontPx": 15,
+            "time": 35.76,
+            "seconds": 11.119
+          },
+          {
+            "selector": "#s2-c4 > span:nth-of-type(1)",
+            "text": "PILLAR 04",
+            "fontPx": 15,
+            "time": 39.366,
+            "seconds": 7.513
+          },
+          {
+            "selector": "div.s2-kicker",
+            "text": "Autonomous Financial Flow",
+            "fontPx": 16,
+            "time": 23.139,
+            "seconds": 23.74
+          },
+          {
+            "selector": "div.s2-chap",
+            "text": "02 / FOUR-PILLAR ARCHITECTURE",
+            "fontPx": 18,
+            "time": 22.538,
+            "seconds": 24.341
+          },
+          {
+            "selector": "#s2-c1 > p:nth-of-type(1)",
+            "text": "Google Gemini 2.5 Flash extracts intent, specs, and budget constraints from plain English.",
+            "fontPx": 19,
+            "time": 26.745,
+            "seconds": 20.134
+          },
+          {
+            "selector": "#s2-c2 > p:nth-of-type(1)",
+            "text": "Express middleware recalculates DB price snapshots and enforces hard monthly spending ceilings.",
+            "fontPx": 19,
+            "time": 31.252,
+            "seconds": 15.627
+          },
+          {
+            "selector": "#s2-c3 > p:nth-of-type(1)",
+            "text": "You inspect every item, verify remaining runway, and explicitly approve checkout.",
+            "fontPx": 19,
+            "time": 35.76,
+            "seconds": 11.119
+          },
+          {
+            "selector": "#s2-c4 > p:nth-of-type(1)",
+            "text": "Server-to-server OAuth 2.0 order creation, capture verification, and duplicate prevention.",
+            "fontPx": 19,
+            "time": 39.366,
+            "seconds": 7.513
+          },
+          {
+            "selector": "#s2-bar > span:nth-of-type(1)",
+            "text": "Security Boundary:",
+            "fontPx": 20,
+            "time": 41.169,
+            "seconds": 5.71
+          },
+          {
+            "selector": "span.hl",
+            "text": "AI cannot capture payments or override budget ceilings.",
+            "fontPx": 20,
+            "time": 41.169,
+            "seconds": 5.71
+          },
+          {
+            "selector": "#s2-bar > span:nth-of-type(2)",
+            "text": "Orders API v2 • CAPTURE Intent",
+            "fontPx": 20,
+            "time": 41.169,
+            "seconds": 5.71
+          },
+          {
+            "selector": "#s2-hero > p:nth-of-type(1)",
+            "text": "PayPilot separates artificial intelligence from financial authority across four strict layers.",
+            "fontPx": 24,
+            "time": 23.139,
+            "seconds": 23.74
+          },
+          {
+            "selector": "#s2-c1 > h3:nth-of-type(1)",
+            "text": "AI Handles Shopping Intelligence",
+            "fontPx": 25,
+            "time": 26.745,
+            "seconds": 20.134
+          },
+          {
+            "selector": "#s2-c2 > h3:nth-of-type(1)",
+            "text": "Backend Enforces Financial Rules",
+            "fontPx": 25,
+            "time": 31.252,
+            "seconds": 15.627
+          },
+          {
+            "selector": "#s2-c3 > h3:nth-of-type(1)",
+            "text": "User Controls Authorization",
+            "fontPx": 25,
+            "time": 35.76,
+            "seconds": 11.119
+          },
+          {
+            "selector": "#s2-c4 > h3:nth-of-type(1)",
+            "text": "PayPal Settles the Transaction",
+            "fontPx": 25,
+            "time": 39.366,
+            "seconds": 7.513
+          }
+        ]
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 3.91 s (27.05–30.95 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 27.045,
+        "seconds": 3.907,
+        "floorSeconds": 3,
+        "until": 30.952
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 3.91 s (31.55–35.46 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 31.553,
+        "seconds": 3.906,
+        "floorSeconds": 3,
+        "until": 35.459
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 4.81 s (41.47–46.28 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 41.469,
+        "seconds": 4.808,
+        "floorSeconds": 3,
+        "until": 46.277
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 3.61 s (47.78–51.39 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 47.78,
+        "seconds": 3.606,
+        "floorSeconds": 3,
+        "until": 51.386
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 4.21 s (52.29–56.49 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 52.287,
+        "seconds": 4.207,
+        "floorSeconds": 3,
+        "until": 56.494
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 27 text elements stay under it for 0.5 s or more, the smallest \"98% Match • Curated #1\" at 14 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "98% Match • Curated #1",
+        "selector": "span.s3-match-pill",
+        "dataAttributes": {},
+        "sourceFile": "compositions/scene-3.html",
+        "bbox": {
+          "x": 1296.14,
+          "y": 403.07,
+          "width": 166.06,
+          "height": 16.98
+        },
+        "time": 64.307,
+        "times": [
+          47.179,
+          47.479,
+          47.479,
+          47.479,
+          47.479,
+          47.479,
+          47.479,
+          47.479,
+          47.479,
+          47.479,
+          47.479,
+          47.479,
+          51.686,
+          56.795,
+          56.795,
+          56.795,
+          58.898,
+          58.898,
+          58.898,
+          60.401,
+          61.302,
+          62.204,
+          63.406,
+          64.307,
+          64.307,
+          64.307,
+          64.307
+        ],
+        "fontPx": 13.98,
+        "floorPx": 28,
+        "seconds": 10.218,
+        "elements": [
+          {
+            "selector": "span.s3-match-pill",
+            "text": "98% Match • Curated #1",
+            "fontPx": 13.98,
+            "time": 64.307,
+            "seconds": 10.218
+          },
+          {
+            "selector": "div.s3-sec-label",
+            "text": "Active Extracted Constraints",
+            "fontPx": 14,
+            "time": 47.479,
+            "seconds": 27.046
+          },
+          {
+            "selector": "div.s3-mic",
+            "text": "Mic Ready",
+            "fontPx": 15,
+            "time": 47.479,
+            "seconds": 27.046
+          },
+          {
+            "selector": "#s3-st1",
+            "text": "✓ extractShoppingRequirements",
+            "fontPx": 15,
+            "time": 60.401,
+            "seconds": 14.124
+          },
+          {
+            "selector": "#s3-st2",
+            "text": "✓ searchProducts (384 items)",
+            "fontPx": 15,
+            "time": 61.302,
+            "seconds": 13.223
+          },
+          {
+            "selector": "#s3-st3",
+            "text": "✓ rankAndRecommend",
+            "fontPx": 15,
+            "time": 62.204,
+            "seconds": 12.321
+          },
+          {
+            "selector": "#s3-st4",
+            "text": "✓ checkBudget (Server Math)",
+            "fontPx": 15,
+            "time": 63.406,
+            "seconds": 11.119
+          },
+          {
+            "selector": "div.s3-prod-note",
+            "text": "Verified active noise cancellation, extended battery endurance, and $20.01 below your $150 target limit.",
+            "fontPx": 15.98,
+            "time": 64.307,
+            "seconds": 10.218
+          },
+          {
+            "selector": "div.s3-prod-note > strong:nth-of-type(1)",
+            "text": "Why this pick:",
+            "fontPx": 15.98,
+            "time": 64.307,
+            "seconds": 10.218
+          },
+          {
+            "selector": "div.s3-meta > span:nth-of-type(1)",
+            "text": "Catalog:",
+            "fontPx": 16,
+            "time": 47.479,
+            "seconds": 27.046
+          },
+          {
+            "selector": "div.s3-meta > span:nth-of-type(1) > strong:nth-of-type(1)",
+            "text": "384 items",
+            "fontPx": 16,
+            "time": 47.479,
+            "seconds": 27.046
+          },
+          {
+            "selector": "div.s3-meta > span:nth-of-type(3)",
+            "text": "Monthly Limit:",
+            "fontPx": 16,
+            "time": 47.479,
+            "seconds": 27.046
+          },
+          {
+            "selector": "div.s3-meta > span:nth-of-type(3) > strong:nth-of-type(1)",
+            "text": "$500.00",
+            "fontPx": 16,
+            "time": 47.479,
+            "seconds": 27.046
+          },
+          {
+            "selector": "div.s3-send-btn",
+            "text": "Send",
+            "fontPx": 16,
+            "time": 47.479,
+            "seconds": 27.046
+          },
+          {
+            "selector": "div.s3-meter-row > span:nth-of-type(1)",
+            "text": "Cart Total vs Monthly Limit",
+            "fontPx": 16,
+            "time": 47.479,
+            "seconds": 27.046
+          },
+          {
+            "selector": "div.s3-meter-row > span:nth-of-type(2)",
+            "text": "$129.99 / $500.00",
+            "fontPx": 16,
+            "time": 47.479,
+            "seconds": 27.046
+          },
+          {
+            "selector": "span.s3-tag-emerald",
+            "text": "Category: Headphones",
+            "fontPx": 16,
+            "time": 56.795,
+            "seconds": 17.73
+          },
+          {
+            "selector": "span.s3-tag-blue",
+            "text": "Budget Limit: $150.00",
+            "fontPx": 16,
+            "time": 56.795,
+            "seconds": 17.73
+          },
+          {
+            "selector": "span.s3-tag-slate",
+            "text": "ANC + Battery Life",
+            "fontPx": 16,
+            "time": 56.795,
+            "seconds": 17.73
+          },
+          {
+            "selector": "div.s3-chap",
+            "text": "03 / NATURAL LANGUAGE & VOICE MATCHING",
+            "fontPx": 17,
+            "time": 47.179,
+            "seconds": 27.346
+          },
+          {
+            "selector": "div.s3-input-text",
+            "text": "Say \"checkout\" to open Cart Review...",
+            "fontPx": 17,
+            "time": 47.479,
+            "seconds": 27.046
+          },
+          {
+            "selector": "div.s3-agent-badge > span:nth-of-type(1)",
+            "text": "PayPilot AI Shopping Agent • Web Speech Voice Enabled",
+            "fontPx": 18,
+            "time": 47.479,
+            "seconds": 27.046
+          },
+          {
+            "selector": "div.s3-bot-reply",
+            "text": "I queried our verified catalog and scored top wireless ANC matches within your target. Strict Catalog Truth applied—all specs come directly from database records.",
+            "fontPx": 19,
+            "time": 58.898,
+            "seconds": 15.627
+          },
+          {
+            "selector": "div.s3-bot-reply > strong:nth-of-type(1)",
+            "text": "PayPilot:",
+            "fontPx": 19,
+            "time": 58.898,
+            "seconds": 15.627
+          },
+          {
+            "selector": "div.s3-bot-reply > strong:nth-of-type(2)",
+            "text": "$150.00",
+            "fontPx": 19,
+            "time": 58.898,
+            "seconds": 15.627
+          },
+          {
+            "selector": "#s3-user",
+            "text": "\"Find wireless headphones for studying and travelling under $150 with active noise cancellation and long battery life.\"",
+            "fontPx": 20,
+            "time": 51.686,
+            "seconds": 22.839
+          },
+          {
+            "selector": "div.s3-prod-name",
+            "text": "Sony Pro Max 2026 Headphone",
+            "fontPx": 23.97,
+            "time": 64.307,
+            "seconds": 10.218
+          }
+        ]
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 9.02 s (64.91–73.92 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 64.908,
+        "seconds": 9.015,
+        "floorSeconds": 3,
+        "until": 73.923
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 34 text elements stay under it for 0.5 s or more, the smallest \"USD $\" at 15 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "USD $",
+        "selector": "span.s4-cur.active",
+        "dataAttributes": {},
+        "sourceFile": "compositions/scene-4.html",
+        "bbox": {
+          "x": 1507.55,
+          "y": 156.85,
+          "width": 45.01,
+          "height": 19
+        },
+        "time": 75.125,
+        "times": [
+          74.524,
+          75.125,
+          75.125,
+          75.125,
+          75.125,
+          75.125,
+          75.125,
+          75.125,
+          75.125,
+          75.125,
+          75.125,
+          75.125,
+          79.633,
+          79.633,
+          79.633,
+          79.633,
+          79.633,
+          79.633,
+          83.239,
+          83.239,
+          83.239,
+          83.239,
+          85.342,
+          85.342,
+          85.342,
+          85.342,
+          87.145,
+          87.145,
+          87.145,
+          87.145,
+          89.249,
+          89.249,
+          89.249,
+          89.249
+        ],
+        "fontPx": 15,
+        "floorPx": 28,
+        "seconds": 22.238,
+        "elements": [
+          {
+            "selector": "span.s4-cur.active",
+            "text": "USD $",
+            "fontPx": 15,
+            "time": 75.125,
+            "seconds": 22.238
+          },
+          {
+            "selector": "div.s4-currencies > span:nth-of-type(2)",
+            "text": "INR ₹",
+            "fontPx": 15,
+            "time": 75.125,
+            "seconds": 22.238
+          },
+          {
+            "selector": "div.s4-currencies > span:nth-of-type(3)",
+            "text": "EUR €",
+            "fontPx": 15,
+            "time": 75.125,
+            "seconds": 22.238
+          },
+          {
+            "selector": "div.s4-currencies > span:nth-of-type(4)",
+            "text": "GBP £",
+            "fontPx": 15,
+            "time": 75.125,
+            "seconds": 22.238
+          },
+          {
+            "selector": "div.s4-truth-pill",
+            "text": "Strict Catalog Truth • Zero Invented Specs",
+            "fontPx": 15,
+            "time": 79.633,
+            "seconds": 17.73
+          },
+          {
+            "selector": "span.s4-cat.active",
+            "text": "Headphones",
+            "fontPx": 16,
+            "time": 75.125,
+            "seconds": 22.238
+          },
+          {
+            "selector": "div.s4-cats > span:nth-of-type(2)",
+            "text": "Laptops",
+            "fontPx": 16,
+            "time": 75.125,
+            "seconds": 22.238
+          },
+          {
+            "selector": "div.s4-cats > span:nth-of-type(3)",
+            "text": "Smartphones",
+            "fontPx": 16,
+            "time": 75.125,
+            "seconds": 22.238
+          },
+          {
+            "selector": "div.s4-cats > span:nth-of-type(4)",
+            "text": "Keyboards",
+            "fontPx": 16,
+            "time": 75.125,
+            "seconds": 22.238
+          },
+          {
+            "selector": "div.s4-cats > span:nth-of-type(5)",
+            "text": "Smartwatches",
+            "fontPx": 16,
+            "time": 75.125,
+            "seconds": 22.238
+          },
+          {
+            "selector": "div.s4-cats > span:nth-of-type(6)",
+            "text": "Monitors",
+            "fontPx": 16,
+            "time": 75.125,
+            "seconds": 22.238
+          },
+          {
+            "selector": "div.s4-cats > span:nth-of-type(7)",
+            "text": "Cameras",
+            "fontPx": 16,
+            "time": 75.125,
+            "seconds": 22.238
+          },
+          {
+            "selector": "table.s4-table > thead:nth-of-type(1) > tr:nth-of-type(1) > th:nth-of-type(1)",
+            "text": "Specification",
+            "fontPx": 16,
+            "time": 79.633,
+            "seconds": 17.73
+          },
+          {
+            "selector": "table.s4-table > thead:nth-of-type(1) > tr:nth-of-type(1) > th:nth-of-type(2)",
+            "text": "Sony Pro Max 2026",
+            "fontPx": 16,
+            "time": 79.633,
+            "seconds": 17.73
+          },
+          {
+            "selector": "table.s4-table > thead:nth-of-type(1) > tr:nth-of-type(1) > th:nth-of-type(3)",
+            "text": "AeroSound Studio ANC",
+            "fontPx": 16,
+            "time": 79.633,
+            "seconds": 17.73
+          },
+          {
+            "selector": "table.s4-table > thead:nth-of-type(1) > tr:nth-of-type(1) > th:nth-of-type(4)",
+            "text": "SoundPulse Lite",
+            "fontPx": 16,
+            "time": 79.633,
+            "seconds": 17.73
+          },
+          {
+            "selector": "div.s4-chap",
+            "text": "04 / CATALOG EXPLORER",
+            "fontPx": 17,
+            "time": 74.524,
+            "seconds": 22.839
+          },
+          {
+            "selector": "#s4-r1 > td:nth-of-type(1)",
+            "text": "Verified Price",
+            "fontPx": 20,
+            "time": 83.239,
+            "seconds": 14.124
+          },
+          {
+            "selector": "#s4-r1 > td:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "$129.99",
+            "fontPx": 20,
+            "time": 83.239,
+            "seconds": 14.124
+          },
+          {
+            "selector": "#s4-r1 > td:nth-of-type(3)",
+            "text": "$148.00",
+            "fontPx": 20,
+            "time": 83.239,
+            "seconds": 14.124
+          },
+          {
+            "selector": "#s4-r1 > td:nth-of-type(4)",
+            "text": "$89.00",
+            "fontPx": 20,
+            "time": 83.239,
+            "seconds": 14.124
+          },
+          {
+            "selector": "#s4-r2 > td:nth-of-type(1)",
+            "text": "Battery Endurance",
+            "fontPx": 20,
+            "time": 85.342,
+            "seconds": 12.021
+          },
+          {
+            "selector": "#s4-r2 > td:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "36 hrs ANC On",
+            "fontPx": 20,
+            "time": 85.342,
+            "seconds": 12.021
+          },
+          {
+            "selector": "#s4-r2 > td:nth-of-type(3)",
+            "text": "30 hrs ANC On",
+            "fontPx": 20,
+            "time": 85.342,
+            "seconds": 12.021
+          },
+          {
+            "selector": "#s4-r2 > td:nth-of-type(4)",
+            "text": "24 hrs Standard",
+            "fontPx": 20,
+            "time": 85.342,
+            "seconds": 12.021
+          },
+          {
+            "selector": "#s4-r3 > td:nth-of-type(1)",
+            "text": "Noise Cancellation",
+            "fontPx": 20,
+            "time": 87.145,
+            "seconds": 10.218
+          },
+          {
+            "selector": "#s4-r3 > td:nth-of-type(2)",
+            "text": "Adaptive Dual-Mic ANC",
+            "fontPx": 20,
+            "time": 87.145,
+            "seconds": 10.218
+          },
+          {
+            "selector": "#s4-r3 > td:nth-of-type(3)",
+            "text": "Hybrid Studio ANC",
+            "fontPx": 20,
+            "time": 87.145,
+            "seconds": 10.218
+          },
+          {
+            "selector": "#s4-r3 > td:nth-of-type(4)",
+            "text": "Passive Isolation",
+            "fontPx": 20,
+            "time": 87.145,
+            "seconds": 10.218
+          },
+          {
+            "selector": "#s4-r4 > td:nth-of-type(1)",
+            "text": "Warranty & Match",
+            "fontPx": 20,
+            "time": 89.249,
+            "seconds": 8.114
+          },
+          {
+            "selector": "#s4-r4 > td:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "2-Year • 98% Match",
+            "fontPx": 20,
+            "time": 89.249,
+            "seconds": 8.114
+          },
+          {
+            "selector": "#s4-r4 > td:nth-of-type(3)",
+            "text": "1-Year • 91% Match",
+            "fontPx": 20,
+            "time": 89.249,
+            "seconds": 8.114
+          },
+          {
+            "selector": "#s4-r4 > td:nth-of-type(4)",
+            "text": "1-Year • 78% Match",
+            "fontPx": 20,
+            "time": 89.249,
+            "seconds": 8.114
+          },
+          {
+            "selector": "div.s4-matrix-title",
+            "text": "Side-by-Side Comparison Matrix (Up to 4 Products)",
+            "fontPx": 26,
+            "time": 79.633,
+            "seconds": 17.73
+          }
+        ]
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 3.91 s (75.43–79.33 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 75.426,
+        "seconds": 3.906,
+        "floorSeconds": 3,
+        "until": 79.332
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 7.21 s (89.55–96.76 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 89.549,
+        "seconds": 7.212,
+        "floorSeconds": 3,
+        "until": 96.761
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 25 text elements stay under it for 0.5 s or more, the smallest \"PASS • WITHIN MONTHLY LIMIT\" at 15 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "PASS • WITHIN MONTHLY LIMIT",
+        "selector": "span.s5-tag-ok",
+        "dataAttributes": {},
+        "sourceFile": "compositions/scene-5.html",
+        "bbox": {
+          "x": 136,
+          "y": 169.94,
+          "width": 234.61,
+          "height": 19
+        },
+        "time": 98.264,
+        "times": [
+          97.663,
+          98.264,
+          98.264,
+          98.264,
+          98.264,
+          98.264,
+          98.264,
+          98.264,
+          98.264,
+          98.264,
+          98.264,
+          98.264,
+          98.264,
+          106.377,
+          106.377,
+          106.377,
+          106.377,
+          106.377,
+          106.377,
+          106.377,
+          106.377,
+          106.377,
+          106.377,
+          106.377,
+          110.885
+        ],
+        "fontPx": 15,
+        "floorPx": 28,
+        "seconds": 24.341,
+        "elements": [
+          {
+            "selector": "span.s5-tag-ok",
+            "text": "PASS • WITHIN MONTHLY LIMIT",
+            "fontPx": 15,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "span.s5-tag-err",
+            "text": "HTTP 422 • CHECKOUT BLOCKED",
+            "fontPx": 15,
+            "time": 106.377,
+            "seconds": 16.228
+          },
+          {
+            "selector": "div.s5-chap",
+            "text": "05 / FINANCIAL PROTECTION",
+            "fontPx": 17,
+            "time": 97.663,
+            "seconds": 24.942
+          },
+          {
+            "selector": "div.s5-banner-ok",
+            "text": "Approved: Remaining runway after purchase is $359.61. Server-verified DB price snapshot locked.",
+            "fontPx": 18,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "#s5-alert",
+            "text": "Checkout Blocked: Budget Exceeded ($796.00 over authorized limit). Express middleware prevents AI or client tampering.",
+            "fontPx": 18,
+            "time": 110.885,
+            "seconds": 11.72
+          },
+          {
+            "selector": "#s5-left > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Sony Pro Max 2026 Headphone (×1)",
+            "fontPx": 20,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "#s5-left > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > strong:nth-of-type(1)",
+            "text": "$129.99",
+            "fontPx": 20,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "#s5-left > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Estimated Shipping",
+            "fontPx": 20,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "#s5-left > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > strong:nth-of-type(1)",
+            "text": "FREE",
+            "fontPx": 20,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "#s5-left > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "Estimated Tax (8%)",
+            "fontPx": 20,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "#s5-left > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > strong:nth-of-type(1)",
+            "text": "$10.40",
+            "fontPx": 20,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "#s5-left > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(1)",
+            "text": "Monthly Spending Cap",
+            "fontPx": 20,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "#s5-left > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(4) > strong:nth-of-type(1)",
+            "text": "$500.00",
+            "fontPx": 20,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "#s5-right > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Flagship Smartphone (×1)",
+            "fontPx": 20,
+            "time": 106.377,
+            "seconds": 16.228
+          },
+          {
+            "selector": "#s5-right > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > strong:nth-of-type(1)",
+            "text": "$1,200.00",
+            "fontPx": 20,
+            "time": 106.377,
+            "seconds": 16.228
+          },
+          {
+            "selector": "#s5-right > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Estimated Shipping",
+            "fontPx": 20,
+            "time": 106.377,
+            "seconds": 16.228
+          },
+          {
+            "selector": "#s5-right > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > strong:nth-of-type(1)",
+            "text": "FREE",
+            "fontPx": 20,
+            "time": 106.377,
+            "seconds": 16.228
+          },
+          {
+            "selector": "#s5-right > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "Estimated Tax (8%)",
+            "fontPx": 20,
+            "time": 106.377,
+            "seconds": 16.228
+          },
+          {
+            "selector": "#s5-right > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(3) > strong:nth-of-type(1)",
+            "text": "$96.00",
+            "fontPx": 20,
+            "time": 106.377,
+            "seconds": 16.228
+          },
+          {
+            "selector": "#s5-right > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(1)",
+            "text": "Monthly Spending Cap",
+            "fontPx": 20,
+            "time": 106.377,
+            "seconds": 16.228
+          },
+          {
+            "selector": "#s5-right > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(4) > strong:nth-of-type(1)",
+            "text": "$500.00",
+            "fontPx": 20,
+            "time": 106.377,
+            "seconds": 16.228
+          },
+          {
+            "selector": "#s5-left > div:nth-of-type(1) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Final Order Amount",
+            "fontPx": 26,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "span.em",
+            "text": "$140.39",
+            "fontPx": 26,
+            "time": 98.264,
+            "seconds": 24.341
+          },
+          {
+            "selector": "#s5-right > div:nth-of-type(1) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Attempted Total",
+            "fontPx": 26,
+            "time": 106.377,
+            "seconds": 16.228
+          },
+          {
+            "selector": "span.rd",
+            "text": "$1,296.00",
+            "fontPx": 26,
+            "time": 106.377,
+            "seconds": 16.228
+          }
+        ]
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 7.21 s (98.56–105.78 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 98.564,
+        "seconds": 7.212,
+        "floorSeconds": 3,
+        "until": 105.776
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 3.61 s (106.68–110.28 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 106.678,
+        "seconds": 3.606,
+        "floorSeconds": 3,
+        "until": 110.284
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 10.52 s (111.19–121.70 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 111.185,
+        "seconds": 10.518,
+        "floorSeconds": 3,
+        "until": 121.703
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 4.81 s (129.22–134.02 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 129.215,
+        "seconds": 4.808,
+        "floorSeconds": 3,
+        "until": 134.023
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 20 text elements stay under it for 0.5 s or more, the smallest \"PayPal Order Identifier\" at 14 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "PayPal Order Identifier",
+        "selector": "div.s6-ids > div:nth-of-type(1) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/scene-6.html",
+        "bbox": {
+          "x": 995.21,
+          "y": 377.11,
+          "width": 152.01,
+          "height": 16.78
+        },
+        "time": 136.127,
+        "times": [
+          122.604,
+          122.604,
+          123.506,
+          123.506,
+          126.811,
+          126.811,
+          126.811,
+          128.915,
+          128.915,
+          134.324,
+          134.324,
+          136.127,
+          136.127,
+          136.127,
+          136.127,
+          136.127,
+          136.127,
+          136.127,
+          136.127,
+          136.127
+        ],
+        "fontPx": 13.82,
+        "floorPx": 28,
+        "seconds": 10.217,
+        "elements": [
+          {
+            "selector": "div.s6-ids > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "PayPal Order Identifier",
+            "fontPx": 13.82,
+            "time": 136.127,
+            "seconds": 10.217
+          },
+          {
+            "selector": "div.s6-ids > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Server Capture Reference",
+            "fontPx": 13.82,
+            "time": 136.127,
+            "seconds": 10.217
+          },
+          {
+            "selector": "div.s6-ids > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "Purchased Item",
+            "fontPx": 13.82,
+            "time": 136.127,
+            "seconds": 10.217
+          },
+          {
+            "selector": "div.s6-ids > div:nth-of-type(4) > span:nth-of-type(1)",
+            "text": "Duplicate Capture Guard",
+            "fontPx": 13.82,
+            "time": 136.127,
+            "seconds": 10.217
+          },
+          {
+            "selector": "div.s6-conf-kicker",
+            "text": "Payment Verified & Captured",
+            "fontPx": 14.81,
+            "time": 136.127,
+            "seconds": 10.217
+          },
+          {
+            "selector": "div.s6-status-pill",
+            "text": "Sandbox Verified",
+            "fontPx": 15,
+            "time": 126.811,
+            "seconds": 19.533
+          },
+          {
+            "selector": "#s6-s1 > div:nth-of-type(1)",
+            "text": "1. POST /api/payments/paypal/create-order",
+            "fontPx": 16,
+            "time": 123.506,
+            "seconds": 22.838
+          },
+          {
+            "selector": "#s6-s2 > div:nth-of-type(1)",
+            "text": "2. PayPal JS SDK User Authorization",
+            "fontPx": 16,
+            "time": 128.915,
+            "seconds": 17.429
+          },
+          {
+            "selector": "#s6-s3 > div:nth-of-type(1)",
+            "text": "3. POST /api/payments/paypal/capture-order",
+            "fontPx": 16,
+            "time": 134.324,
+            "seconds": 12.02
+          },
+          {
+            "selector": "div.s6-chap",
+            "text": "06 / VERIFIED PAYPAL CHECKOUT",
+            "fontPx": 17,
+            "time": 122.604,
+            "seconds": 23.74
+          },
+          {
+            "selector": "#s6-s1 > div:nth-of-type(2)",
+            "text": "Server obtains OAuth 2.0 token via HTTP Basic Auth and recalculates cart totals from DB snapshots.",
+            "fontPx": 17,
+            "time": 123.506,
+            "seconds": 22.838
+          },
+          {
+            "selector": "#s6-s2 > div:nth-of-type(2)",
+            "text": "User reviews the exact USD total and explicitly approves payment inside PayPal Sandbox.",
+            "fontPx": 17,
+            "time": 128.915,
+            "seconds": 17.429
+          },
+          {
+            "selector": "#s6-s3 > div:nth-of-type(2)",
+            "text": "Backend verifies 200/201 capture status, prevents duplicate captures, and settles order.",
+            "fontPx": 17,
+            "time": 134.324,
+            "seconds": 12.02
+          },
+          {
+            "selector": "div.s6-ids > div:nth-of-type(1) > span:nth-of-type(2)",
+            "text": "5O190127TN364715T",
+            "fontPx": 17.77,
+            "time": 136.127,
+            "seconds": 10.217
+          },
+          {
+            "selector": "div.s6-ids > div:nth-of-type(2) > span:nth-of-type(2)",
+            "text": "2GG279541U471931P",
+            "fontPx": 17.77,
+            "time": 136.127,
+            "seconds": 10.217
+          },
+          {
+            "selector": "div.s6-ids > div:nth-of-type(3) > span:nth-of-type(2)",
+            "text": "Sony Pro Max 2026",
+            "fontPx": 17.77,
+            "time": 136.127,
+            "seconds": 10.217
+          },
+          {
+            "selector": "div.s6-ids > div:nth-of-type(4) > span:nth-of-type(2)",
+            "text": "Idempotent Active",
+            "fontPx": 17.77,
+            "time": 136.127,
+            "seconds": 10.217
+          },
+          {
+            "selector": "div.s6-pp-btn",
+            "text": "PayPal Orders API v2",
+            "fontPx": 19,
+            "time": 126.811,
+            "seconds": 19.533
+          },
+          {
+            "selector": "div.s6-pipe-title",
+            "text": "Zero Client Secrets on Frontend",
+            "fontPx": 22,
+            "time": 122.604,
+            "seconds": 23.74
+          },
+          {
+            "selector": "div.s6-summary-line > span:nth-of-type(1)",
+            "text": "Total Settled Amount (USD)",
+            "fontPx": 22,
+            "time": 126.811,
+            "seconds": 19.533
+          }
+        ]
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 9.01 s (136.73–145.74 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 136.728,
+        "seconds": 9.015,
+        "floorSeconds": 3,
+        "until": 145.743
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 28 text elements stay under it for 0.5 s or more, the smallest \"Monthly Budget\" at 14 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "Monthly Budget",
+        "selector": "#s7-kpis > div:nth-of-type(1) > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/scene-7.html",
+        "bbox": {
+          "x": 111,
+          "y": 221.1,
+          "width": 144.61,
+          "height": 17
+        },
+        "time": 149.048,
+        "times": [
+          146.945,
+          146.945,
+          149.048,
+          149.048,
+          149.048,
+          149.048,
+          149.048,
+          149.048,
+          149.048,
+          149.048,
+          151.753,
+          151.753,
+          151.753,
+          151.753,
+          151.753,
+          154.758,
+          154.758,
+          154.758,
+          154.758,
+          154.758,
+          154.758,
+          154.758,
+          154.758,
+          154.758,
+          154.758,
+          154.758,
+          154.758,
+          154.758
+        ],
+        "fontPx": 14,
+        "floorPx": 28,
+        "seconds": 13.523,
+        "elements": [
+          {
+            "selector": "#s7-kpis > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "Monthly Budget",
+            "fontPx": 14,
+            "time": 149.048,
+            "seconds": 13.523
+          },
+          {
+            "selector": "#s7-kpis > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "Total Spending",
+            "fontPx": 14,
+            "time": 149.048,
+            "seconds": 13.523
+          },
+          {
+            "selector": "#s7-kpis > div:nth-of-type(3) > div:nth-of-type(1)",
+            "text": "Remaining Runway",
+            "fontPx": 14,
+            "time": 149.048,
+            "seconds": 13.523
+          },
+          {
+            "selector": "#s7-kpis > div:nth-of-type(4) > div:nth-of-type(1)",
+            "text": "Verified Captures",
+            "fontPx": 14,
+            "time": 149.048,
+            "seconds": 13.523
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "completed",
+            "fontPx": 14,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "captured",
+            "fontPx": 14,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(3) > span:nth-of-type(1)",
+            "text": "persisted",
+            "fontPx": 14,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-kpis > div:nth-of-type(1) > div:nth-of-type(3)",
+            "text": "Strict Enforcement Active",
+            "fontPx": 15,
+            "time": 149.048,
+            "seconds": 13.523
+          },
+          {
+            "selector": "#s7-kpis > div:nth-of-type(2) > div:nth-of-type(3)",
+            "text": "28% of authorized cap",
+            "fontPx": 15,
+            "time": 149.048,
+            "seconds": 13.523
+          },
+          {
+            "selector": "#s7-kpis > div:nth-of-type(3) > div:nth-of-type(3)",
+            "text": "Safe spending balance",
+            "fontPx": 15,
+            "time": 149.048,
+            "seconds": 13.523
+          },
+          {
+            "selector": "#s7-kpis > div:nth-of-type(4) > div:nth-of-type(3)",
+            "text": "PayPal Sandbox Settled",
+            "fontPx": 15,
+            "time": 149.048,
+            "seconds": 13.523
+          },
+          {
+            "selector": "div.s7-chap",
+            "text": "07 / ANALYTICS & RECEIPTS",
+            "fontPx": 16,
+            "time": 146.945,
+            "seconds": 15.626
+          },
+          {
+            "selector": "#s7-chart > svg:nth-of-type(1) > text:nth-of-type(1)",
+            "text": "Week 1",
+            "fontPx": 16,
+            "time": 151.753,
+            "seconds": 10.818
+          },
+          {
+            "selector": "#s7-chart > svg:nth-of-type(1) > text:nth-of-type(2)",
+            "text": "Week 2",
+            "fontPx": 16,
+            "time": 151.753,
+            "seconds": 10.818
+          },
+          {
+            "selector": "#s7-chart > svg:nth-of-type(1) > text:nth-of-type(3)",
+            "text": "Week 3",
+            "fontPx": 16,
+            "time": 151.753,
+            "seconds": 10.818
+          },
+          {
+            "selector": "#s7-chart > svg:nth-of-type(1) > text:nth-of-type(4)",
+            "text": "Today ($140.39)",
+            "fontPx": 16,
+            "time": 151.753,
+            "seconds": 10.818
+          },
+          {
+            "selector": "#s7-banner > div:nth-of-type(1) > p:nth-of-type(1)",
+            "text": "Persisted expenditure metrics, category breakdowns, and verified PayPal capture receipts.",
+            "fontPx": 17,
+            "time": 146.945,
+            "seconds": 15.626
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > strong:nth-of-type(1)",
+            "text": "#PP-8492A1",
+            "fontPx": 17,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Sony Pro Max 2026 Headphone",
+            "fontPx": 17,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(1) > strong:nth-of-type(1)",
+            "text": "$140.39",
+            "fontPx": 17,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > strong:nth-of-type(1)",
+            "text": "PayPal Order",
+            "fontPx": 17,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "5O190127TN364715T",
+            "fontPx": 17,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(2) > strong:nth-of-type(1)",
+            "text": "Verified",
+            "fontPx": 17,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(1) > strong:nth-of-type(1)",
+            "text": "Database Sync",
+            "fontPx": 17,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "PostgreSQL / Local Store",
+            "fontPx": 17,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(2) > div:nth-of-type(3) > strong:nth-of-type(1)",
+            "text": "Receipt Ready",
+            "fontPx": 17,
+            "time": 154.758,
+            "seconds": 7.813
+          },
+          {
+            "selector": "#s7-chart > div:nth-of-type(1)",
+            "text": "Spending Trend & Category Breakdown (Recharts)",
+            "fontPx": 20,
+            "time": 151.753,
+            "seconds": 10.818
+          },
+          {
+            "selector": "#s7-orders > div:nth-of-type(1)",
+            "text": "Transaction & Order History",
+            "fontPx": 20,
+            "time": 154.758,
+            "seconds": 7.813
+          }
+        ]
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 6.31 s (155.36–161.67 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 155.359,
+        "seconds": 6.31,
+        "floorSeconds": 3,
+        "until": 161.669
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 7 text elements stay under it for 0.5 s or more, the smallest \"Frontend\" at 14 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "Frontend",
+        "selector": "#s8-stack > div:nth-of-type(1) > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/scene-8.html",
+        "bbox": {
+          "x": 229,
+          "y": 97.46,
+          "width": 84.58,
+          "height": 17
+        },
+        "time": 163.172,
+        "times": [
+          163.172,
+          163.172,
+          163.172,
+          163.172,
+          163.172,
+          163.172,
+          167.379
+        ],
+        "fontPx": 14,
+        "floorPx": 28,
+        "seconds": 16.828,
+        "elements": [
+          {
+            "selector": "#s8-stack > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "Frontend",
+            "fontPx": 14,
+            "time": 163.172,
+            "seconds": 16.828
+          },
+          {
+            "selector": "#s8-stack > div:nth-of-type(2) > div:nth-of-type(1)",
+            "text": "AI & Backend",
+            "fontPx": 14,
+            "time": 163.172,
+            "seconds": 16.828
+          },
+          {
+            "selector": "#s8-stack > div:nth-of-type(3) > div:nth-of-type(1)",
+            "text": "Payments & Data",
+            "fontPx": 14,
+            "time": 163.172,
+            "seconds": 16.828
+          },
+          {
+            "selector": "#s8-tests",
+            "text": "17 / 17 Automated Tests Passed • Zero-Config Local Simulation Ready",
+            "fontPx": 18,
+            "time": 167.379,
+            "seconds": 12.621
+          },
+          {
+            "selector": "#s8-stack > div:nth-of-type(1) > div:nth-of-type(2)",
+            "text": "React 18 • TypeScript • Tailwind",
+            "fontPx": 24,
+            "time": 163.172,
+            "seconds": 16.828
+          },
+          {
+            "selector": "#s8-stack > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Gemini 2.5 Flash • Express • Zod",
+            "fontPx": 24,
+            "time": 163.172,
+            "seconds": 16.828
+          },
+          {
+            "selector": "#s8-stack > div:nth-of-type(3) > div:nth-of-type(2)",
+            "text": "PayPal Orders v2 • PostgreSQL",
+            "fontPx": 24,
+            "time": 163.172,
+            "seconds": 16.828
+          }
+        ]
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 3.31 s (163.47–166.78 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 163.472,
+        "seconds": 3.306,
+        "floorSeconds": 3,
+        "until": 166.778
+      },
+      {
+        "code": "dead_stretch",
+        "severity": "warning",
+        "message": "Nothing on screen changes for 5.41 s (171.59–177.00 s): start the next move within 3 s, or put data-hold on the element whose stillness is deliberate; see references/motion.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 171.586,
+        "seconds": 5.414,
+        "floorSeconds": 3,
+        "until": 177
+      }
+    ],
+    "enabled": true,
+    "step": 0.3009999999999877,
+    "samples": 599
+  },
+  "audio": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": []
+  },
+  "hdr": {
+    "autoPromotion": null,
+    "inspection": "available"
+  },
+  "snapshots": {
+    "enabled": false,
+    "files": [],
+    "times": [],
+    "findingFiles": []
+  }
+}
